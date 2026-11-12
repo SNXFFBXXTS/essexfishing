@@ -1,41 +1,42 @@
-# Shoebury Shore Fishing 🎣
+# Shoebury Fishing Guide 🎣
 
-A phone-friendly sea fishing game set on Shoebury East Beach (Thames Estuary).
-It runs in the browser. Open the GitHub Pages link on your phone, then use
-"Add to Home screen" to get it as an app icon.
+A live, phone-friendly fishing guide for Shoebury East Beach (Thames Estuary).
+Open the GitHub Pages link on your phone and use "Add to Home screen".
 
-## How it plays
-- **Live conditions:** the game uses the real clock. It works out the tide (height,
-  flooding or ebbing, springs or neaps), sunrise and sunset, the moon phase and the
-  season for Shoebury. Fish bite best when real anglers would expect them to.
-- **Tackle box:** pick a rig (flappers, pulley pennel, running ledger, float), a
-  hook size (6 up to 4/0), a bait (lug, rag, squid, mackerel, peeler, sandeel) and a
-  plain or grip lead.
-- **Cast:** hold the button and let go at full power.
-- **Bite:** a rattle on the tip comes first. Strike on the big pull-round.
-- **Fight:** hold to reel and let go when the tension goes red. Snap the line and you
-  lose the rig.
-- **Shop and log:** sell your catch for cash, buy tackle, and track your PBs.
+**https://snxffbxxts.github.io/essexfishing/**
+
+## What it does
+- **🌊 Now:** live tide, wind, pressure, sky, sea state and water temperature.
+  A fishing rating with reasons, the best fishing window over the next 24 hours,
+  the next high and low waters, and what's in season.
+- **🎣 My setup:** pick a rig, hook size, bait, casting distance and lead. It
+  shows what you're likely to catch with that setup right now, what's holding
+  each species back (for example "hook too small, use 2/0–4/0"), and the best
+  time in the next 24 hours to fish that setup.
+- **⭐ Best setup:** it tries every combination of tackle against the live
+  conditions and recommends the setup for the most bites and the one for a bigger
+  fish, plus the best setup for each fish that's in season. Tap "Use this
+  setup" to load it.
+- **🐟 Species:** a guide to each Shoebury species: season, baits, hooks, rigs,
+  where, when and water temperature.
+
+## Live data
+- Environment Agency Southend tide gauge, the observed level every 15 minutes
+- Open-Meteo marine: tide curve, waves and sea temperature. The game lines the
+  curve up against the gauge to get the next high and low waters.
+- Open-Meteo forecast: current and hourly wind, gusts, pressure, cloud and rain
+- If a feed fails, it falls back to saved data, then to a moon-based tide model
 
 ## Roadmap
-- [x] **v0.1 Basics:** cast, bite, strike and fight loop; tackle box; shop; catch log;
-  modelled tide, sun, moon and season; 11 Shoebury species plus crabs
-- [x] **v0.2 Part 1, live conditions:**
-  - Real tides from the Environment Agency Southend gauge, lined up with the
-    Open-Meteo marine tide curve, which gives the next high and low waters
-  - Live wind, gusts, pressure trend, cloud, rain, waves and sea temperature
-  - A fishing rating with reasons (onshore wind, falling pressure, tide stage…)
-  - The scene shows live cloud, rain, fog, sea chop, coloured water, and a wind flag
-  - Headwinds shorten your cast, and strong wind nods the rod tip (false bites)
-  - Falls back to saved data, then to the moon-based tide model, if a feed fails
-- [ ] **v0.4 More tackle:** rods and reels, clipped-down rigs, bait cocktails,
-  bait-collecting trips at low water (dig lug, gather peeler crab)
-- [ ] **v0.5 More marks:** Southend Pier, Thorpe Bay, Canvey and so on, each with
-  its own fish and snags
-- [ ] **v0.6 Polish:** sounds (reel, bite alarm, waves), better art, an offline
-  installable app (PWA)
-- [ ] **Later:** connect it to the real fishing "bible" app, so species, bait and
-  mark info come from the same data
+- [x] v0.1–0.2: live conditions engine (started out as a game)
+- [x] v0.3: switched to a guide app, with setup selection, catch predictions,
+  recommendations and a species guide
+- [ ] More tackle: bait cocktails (lug + squid), clipped-down rigs, bead and spoon attractors
+- [ ] More marks: Southend Pier, Thorpe Bay, Canvey and so on, each with its own
+  species, distances and snags
+- [ ] Your own catch diary, to log real catches against the conditions on the day
+- [ ] Planning ahead: pick a day later in the week using the forecast
+- [ ] Offline install (PWA)
 
 ## Run locally
 It's a single `index.html` file. Open it in any browser.
