@@ -6,14 +6,21 @@ Open the GitHub Pages link on your phone and use "Add to Home screen".
 **https://snxffbxxts.github.io/essexfishing/**
 
 ## What it does
-- **🌊 Now:** live tide, wind, pressure, sky, sea state and water temperature.
-  A fishing rating with reasons, the best fishing window over the next 24 hours,
-  the next high and low waters, and what's in season.
-- **🎣 My setup:** pick a rig, hook size, bait, casting distance and lead. It
+Use the **time bar** at the top to pick any day and hour up to about 7 days ahead
+(◀ ▶ step an hour, tap the time to choose a day or slide the hour, and **Live**
+jumps back to now). Every tab then shows that moment.
+
+- **🌊 Now:** a fishing rating with reasons, plus tide, wind, sky, pressure,
+  sea, light and moon
+- **🌙 Tides:** tide stage, springs or neaps, the next 8 tide times, and a height chart
+- **🌬️ Weather:** detailed weather and sea, plus an hour-by-hour rating for the next 12 hours
+- **⏰ Best times:** a 24-hour rating chart, and a week planner with the best window
+  for each day (tap a day to jump there)
+- **🎣 My catch / 🧰 Tackle:** pick a rig, hook size, bait, casting distance and lead. It
   shows what you're likely to catch with that setup right now, what's holding
   each species back (for example "hook too small, use 2/0–4/0"), and the best
   time in the next 24 hours to fish that setup.
-- **⭐ Best setup:** it tries every combination of tackle against the live
+- **⭐ Recommended:** it tries every combination of tackle against the live
   conditions and recommends the setup for the most bites and the one for a bigger
   fish, plus the best setup for each fish that's in season. Tap "Use this
   setup" to load it.
@@ -35,7 +42,7 @@ Open the GitHub Pages link on your phone and use "Add to Home screen".
 - [ ] More marks: Southend Pier, Thorpe Bay, Canvey and so on, each with its own
   species, distances and snags
 - [ ] Your own catch diary, to log real catches against the conditions on the day
-- [ ] Planning ahead: pick a day later in the week using the forecast
+- [x] v0.4: bigger text and more tabs; time bar to wind forward to any day or hour; week planner
 - [ ] Offline install (PWA)
 
 ## Run locally

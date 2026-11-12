@@ -7,78 +7,92 @@
 <meta name="theme-color" content="#0b1726">
 <title>Shoebury Fishing Guide</title>
 <style>
-:root{--bg:#0b1726;--panel:#13243a;--panel2:#1a304c;--line:#22395a;--ink:#e8f0f8;--dim:#8ea6c0;--acc:#3fd0c9;--warn:#ffd166;--bad:#ff8a80;--good:#7ee081}
+:root{--bg:#0b1726;--panel:#13243a;--panel2:#1a304c;--line:#22395a;--ink:#eef4fa;--dim:#9db3ca;--acc:#3fd0c9;--warn:#ffd166;--bad:#ff8a80;--good:#7ee081}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{display:flex;flex-direction:column;height:100dvh;max-width:600px;margin:0 auto}
-header{padding:8px 10px 6px;background:var(--panel);border-bottom:1px solid var(--line)}
-header h1{font-size:15px;margin:0;display:flex;justify-content:space-between;align-items:center}
-header h1 small{color:var(--dim);font-weight:400;font-size:12px}
-.cond{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:6px}
-.cond div{background:var(--panel2);border-radius:8px;padding:3px 6px;font-size:10px;color:var(--dim)}
-.cond b{display:block;color:var(--ink);font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pill{display:inline-block;padding:1px 8px;border-radius:6px;color:#06121f;font-weight:700}
-main{flex:1;overflow-y:auto;padding:10px 12px 20px}
-.view{display:none}.view.on{display:block}
-nav{display:flex;background:var(--panel);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-nav button{flex:1;border:0;background:none;padding:10px 0 12px;font:inherit;font-size:13px;color:var(--dim)}
-nav button.on{color:var(--acc);font-weight:700}
-h2{font-size:17px;margin:2px 0 8px}
-h3{font-size:12px;color:var(--dim);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.06em}
-.card{background:var(--panel);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14px}
-.card small,.dim{color:var(--dim)}
-ul.r{margin:6px 0 0;padding-left:18px}ul.r li{margin:3px 0}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 10px 0}
+.tbar{display:flex;gap:6px;align-items:center}
+.tbar button{font:inherit;font-size:20px;color:var(--ink);background:var(--panel2);border:1px solid #2c4a70;border-radius:12px;width:48px;height:48px;flex:none}
+.tlabel{flex:1;text-align:center;line-height:1.2;font:inherit;color:var(--ink);background:var(--panel2);border:1px solid #2c4a70;border-radius:12px;padding:4px 6px;min-height:48px}
+.tbar button.tlabel{flex:1;width:auto;height:auto;font-size:15px}
+.tlabel i{font-style:normal;font-size:12px;color:var(--dim)}
+.tlabel b{font-size:17px}
+.tlabel span{font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 7px;border-radius:5px;color:#06121f}
+.tbar button.live{width:auto;padding:0 12px;font-size:15px;font-weight:700}
+.tbar button.live.on{background:var(--acc);color:#06121f;border-color:var(--acc)}
+.days{display:flex;gap:6px;overflow-x:auto;padding:8px 0 4px;scrollbar-width:none}
+.days::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}
+.days button{flex:none;font:inherit;font-size:14px;color:var(--dim);background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:5px 10px;line-height:1.2}
+.days button b{display:block;color:var(--ink);font-size:15px}
+.days button.sel{border-color:var(--acc)}
+input[type=range]{width:100%;margin:6px 0 2px;accent-color:var(--acc);height:28px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:6px 0 8px;scrollbar-width:none}
+.tabs button{flex:none;font:inherit;font-size:16px;color:var(--dim);background:none;border:0;border-bottom:3px solid transparent;padding:6px 8px}
+.tabs button.on{color:var(--ink);font-weight:700;border-bottom-color:var(--acc)}
+main{flex:1;overflow-y:auto;padding:12px 14px 30px}
+h2{font-size:22px;margin:2px 0 10px}
+h3{font-size:14px;color:var(--dim);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+.card{background:var(--panel);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.dim,.card small{color:var(--dim)}
+small{font-size:14px}
+.pill{display:inline-block;padding:2px 10px;border-radius:7px;color:#06121f;font-weight:700}
+ul.r{margin:8px 0 0;padding-left:20px}ul.r li{margin:5px 0}
 .ok{color:var(--good)}.meh{color:var(--warn)}.bad{color:var(--bad)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);border:2px solid transparent;border-radius:10px;padding:7px 10px;text-align:left}
-.chip small{display:block;color:var(--dim);font-size:11px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--panel);border-radius:14px;padding:10px 12px}
+.tile div{font-size:14px;color:var(--dim)}
+.tile b{font-size:21px;display:block;line-height:1.25}
+.tile small{font-size:13px}
+.big{font-size:20px}
+table{width:100%;border-collapse:collapse}
+td{padding:7px 0;vertical-align:top;border-bottom:1px solid #1d3352}
+tr:last-child td{border-bottom:0}
+td.k{color:var(--dim);width:40%}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:16px;color:var(--ink);background:var(--panel);border:2px solid transparent;border-radius:12px;padding:9px 12px;text-align:left}
+.chip small{display:block;color:var(--dim);font-size:13px}
 .chip.sel{border-color:var(--acc);background:#163a4a}
-.fish{background:var(--panel);border-radius:12px;padding:10px 12px;margin-bottom:8px}
-.fish .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.fish .name{font-weight:700;font-size:15px}
-.meter{height:8px;background:#0a1422;border-radius:5px;overflow:hidden;margin:6px 0}
-.meter i{display:block;height:100%;border-radius:5px}
-.fix{font-size:12.5px;color:var(--dim);margin-top:4px}
-.fix b{color:var(--warn);font-weight:600}
-.tl{display:flex;align-items:flex-end;gap:2px;height:90px;margin-top:8px}
+.fish{background:var(--panel);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.fish .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fish .name{font-weight:700;font-size:19px}
+.meter{height:10px;background:#0a1422;border-radius:6px;overflow:hidden;margin:8px 0}
+.meter i{display:block;height:100%;border-radius:6px}
+.fix{font-size:15px;color:var(--dim);margin-top:6px}
+.fix b{color:var(--warn)}
+.tl{display:flex;align-items:flex-end;gap:2px;height:110px;margin-top:16px}
 .tl div{flex:1;border-radius:3px 3px 0 0;position:relative;min-height:3px}
-.tl div span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--ink)}
-.tlx{display:flex;gap:2px;font-size:9.5px;color:var(--dim);margin-top:3px}
+.tl div span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink)}
+.tlx{display:flex;gap:2px;font-size:11px;color:var(--dim);margin-top:4px}
 .tlx span{flex:1;text-align:center}
-button.use{font:inherit;font-size:13px;color:#06121f;background:var(--acc);border:0;border-radius:9px;padding:7px 12px;margin-top:8px;font-weight:700}
-button.plain{font:inherit;font-size:13px;color:var(--ink);background:var(--panel2);border:1px solid #2c4a70;border-radius:9px;padding:7px 12px}
-.setline{font-size:14px;line-height:1.5}
+button.use{font:inherit;font-size:16px;color:#06121f;background:var(--acc);border:0;border-radius:10px;padding:10px 14px;margin-top:10px;font-weight:700}
+button.plain{font:inherit;font-size:16px;color:var(--ink);background:var(--panel2);border:1px solid #2c4a70;border-radius:10px;padding:10px 14px}
+.setline{font-size:17px;line-height:1.6}
 .setline b{color:var(--acc)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-td{padding:4px 0;vertical-align:top}td:first-child{color:var(--dim);width:38%}
-.seg{display:flex;gap:6px;margin:4px 0 10px}
-.seg button{flex:1;font:inherit;font-size:13px;color:var(--dim);background:var(--panel);border:2px solid transparent;border-radius:10px;padding:7px}
-.seg button.sel{color:var(--ink);border-color:var(--acc)}
+.dayrow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border-radius:14px;padding:12px 14px;margin-bottom:8px;width:100%;font:inherit;color:var(--ink);border:0;text-align:left}
+.dayrow .d{font-weight:700;font-size:18px}
+.dayrow small{display:block}
+.note{background:#2a2410;border:1px solid #5a4a20;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:15px}
 </style>
 </head>
 <body>
 <header>
-  <h1>🎣 Shoebury East Beach <small id="clock">--:--</small></h1>
-  <div class="cond">
-    <div>Tide<b id="cTide">–</b></div><div>Next<b id="cNext">–</b></div>
-    <div>Wind<b id="cWind">–</b></div><div>Sky<b id="cSky">–</b></div>
-    <div>Pressure<b id="cPres">–</b></div><div>Sea<b id="cSea">–</b></div>
-    <div>Light<b id="cSun">–</b></div><div>Moon<b id="cMoon">–</b></div>
+  <div class="tbar">
+    <button id="tPrev" aria-label="1 hour back">◀</button>
+    <button class="tlabel" id="tLabel"></button>
+    <button id="tNext" aria-label="1 hour forward">▶</button>
+    <button id="tLive" class="live">Live</button>
   </div>
+  <div id="tpanel" hidden>
+    <div class="days" id="days"></div>
+    <input type="range" id="tHour" min="0" max="23" step="1" aria-label="Hour of day">
+    <div class="dim" style="font-size:13px;text-align:center;margin-bottom:2px">Pick a day, then slide to set the hour</div>
+  </div>
+  <div class="tabs" id="tabs"></div>
 </header>
-<main>
-  <section id="vNow" class="view on"></section>
-  <section id="vSetup" class="view"></section>
-  <section id="vBest" class="view"></section>
-  <section id="vSpecies" class="view"></section>
-</main>
-<nav>
-  <button data-v="vNow" class="on">🌊 Now</button>
-  <button data-v="vSetup">🎣 My setup</button>
-  <button data-v="vBest">⭐ Best setup</button>
-  <button data-v="vSpecies">🐟 Species</button>
-</nav>
+<main id="main"></main>
 <script>
+
 "use strict";
 // =====================================================================
 // LIVE DATA — Shoebury East (51.53N, 0.79E)
@@ -105,12 +119,12 @@ const FEEDS={
       parse:j=>{const a=(j.items||[]).filter(r=>typeof r.value==='number').map(r=>({t:Date.parse(r.dateTime),v:r.value+CD_OFF})).sort((x,y)=>x.t-y.t);
         if(a.length<8)throw Error('no recent readings');return a}},
   om:{name:'Tide curve, waves & sea temp (Open-Meteo marine)',
-      url:'https://marine-api.open-meteo.com/v1/marine?latitude=51.50&longitude=0.85&hourly=sea_level_height_msl,wave_height,sea_surface_temperature&past_days=1&forecast_days=3&timeformat=unixtime&timezone=GMT&cell_selection=sea',
+      url:'https://marine-api.open-meteo.com/v1/marine?latitude=51.50&longitude=0.85&hourly=sea_level_height_msl,wave_height,sea_surface_temperature&past_days=1&forecast_days=8&timeformat=unixtime&timezone=GMT&cell_selection=sea',
       parse:j=>{const h=j.hourly;if(!h||!h.time)throw Error('bad response');const sl=h.sea_level_height_msl||[];
         if(sl.filter(x=>x!=null).length<24)throw Error('no tide data for this spot');
         return{t:h.time.map(x=>x*1000),sl,wave:h.wave_height||[],sst:h.sea_surface_temperature||[]}}},
   wx:{name:'Wind, pressure, cloud & rain (Open-Meteo)',
-      url:'https://api.open-meteo.com/v1/forecast?latitude=51.53&longitude=0.79&current='+WXVARS+'&hourly='+WXVARS+'&past_hours=7&forecast_hours=36&wind_speed_unit=mph&timeformat=unixtime&timezone=GMT',
+      url:'https://api.open-meteo.com/v1/forecast?latitude=51.53&longitude=0.79&current='+WXVARS+'&hourly='+WXVARS+'&past_hours=7&forecast_hours=170&wind_speed_unit=mph&timeformat=unixtime&timezone=GMT',
       parse:j=>{if(!j.current||!j.hourly)throw Error('bad response');const h=j.hourly;h.t=h.time.map(x=>x*1000);return{cur:j.current,h}}}
 };
 const D={err:{},T:{}};
@@ -296,99 +310,143 @@ function bestSetups(c){const res=SETUPS.map(set=>{const A=assess(set,c);let big=
 // UI
 // =====================================================================
 const $=id=>document.getElementById(id);
+// ---- chosen time (null = live) ----
+let selT=null;
+const vt=()=>selT??now();
+const dayStart=(t,add=0)=>{const d=new Date(t);d.setHours(0,0,0,0);d.setDate(d.getDate()+add);return d.getTime()};
+const RANGE_MIN=()=>dayStart(now()),RANGE_MAX=()=>dayStart(now(),7)+23*H;
+function setTime(t){if(t==null){selT=null}else{t=clamp(Math.round(t/H)*H,RANGE_MIN(),RANGE_MAX());selT=Math.abs(t-Math.floor(now()/H)*H)<1?null:t}render()}
+const fmtDay=t=>{const d=dayStart(t),n=dayStart(now());return d===n?'Today':d===dayStart(now(),1)?'Tomorrow':new Date(t).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})};
+const hasWx=t=>!!wxRaw(t);
+
 let SET={rig:'f2',hook:'1',bait:'lug',dist:'mid',lead:'plain'};
 try{const s=JSON.parse(localStorage.getItem('sfish-setup'));if(s&&RIGS[s.rig])SET=s}catch(e){}
 const saveSet=()=>{try{localStorage.setItem('sfish-setup',JSON.stringify(SET))}catch(e){}};
-const setText=s=>'<b>'+RIGS[s.rig].name+'</b> · size <b>'+s.hook+'</b> hook'+(s.rig==='f2'||s.rig==='f3'||s.rig==='pp'?'s':'')+' · <b>'+BAITS[s.bait].name+'</b> · cast <b>'+DISTS[s.dist].name.toLowerCase()+'</b> ('+DISTS[s.dist].note+')'+(RIGS[s.rig].float?'':' · <b>'+LEADS[s.lead].name.toLowerCase()+'</b>');
+const setText=s=>'<b>'+RIGS[s.rig].name+'</b><br>Size <b>'+s.hook+'</b> hook'+(s.rig==='led'||s.rig==='flt'?'':'s')+' · <b>'+BAITS[s.bait].name+'</b><br>Cast <b>'+DISTS[s.dist].name.toLowerCase()+'</b> ('+DISTS[s.dist].note+')'+(RIGS[s.rig].float?'':' · <b>'+LEADS[s.lead].name.toLowerCase()+'</b>');
 const fmtWin=(a,b)=>hh(a)+':00–'+hh(b)+':00';
+const rateCol=v=>v>1.5?'#7ee081':v>1.05?'#a6e3a1':v>.7?'#ffd166':'#ff8a80';
+const rateLab=v=>v>1.5?'Excellent':v>1.05?'Good':v>.7?'Fair':'Poor';
 
-function header(c){const T=c.T,W=c.W,a=moonAge(c.t);
-  $('clock').textContent=new Date(c.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'});
-  $('cTide').textContent=T.h.toFixed(1)+'m '+(T.rising?'↑':'↓');$('cNext').textContent=(T.nextType==='HW'?'High ':'Low ')+hm(T.nextT);
-  $('cWind').textContent=W.ok?W.dir+' '+Math.round(W.ws)+'mph':'–';$('cSky').textContent=W.ok?WXCODE(W.code).join(' '):'–';
-  $('cPres').textContent=W.ok?Math.round(W.p)+(W.dp<=-1?' ↓':W.dp>=1?' ↑':' →'):'–';
-  $('cSea').textContent=W.sst.toFixed(0)+'°C'+(W.wave!=null?' '+W.wave.toFixed(1)+'m':'');
-  $('cSun').textContent={day:'☀️ Day',dawn:'🌅 Dawn',dusk:'🌇 Dusk',night:'🌙 Night'}[c.L];
-  $('cMoon').textContent=moonName(a)+(T.springs>.6?' · spr':T.springs<.25?' · neap':'')}
-
-function timeline(valFn,colorFn,maxV){const t0=Math.ceil(now()/H)*H-H,cols=[],labs=[];let best=null;const vals=[];
+function timeline(t0,valFn,colorFn,maxV){const vals=[],cols=[],labs=[];let best=null;
   for(let i=0;i<24;i++){const t=t0+i*H;vals.push({t,v:valFn(t)})}
   if(!maxV)maxV=Math.max(...vals.map(x=>x.v))*1.05||1;
   const ex=extremes(t0,24);
   for(const {t,v} of vals){const mark=ex.find(e=>e.t>=t&&e.t<t+H);
     cols.push('<div style="height:'+Math.max(4,Math.min(100,v/maxV*100))+'%;background:'+colorFn(v)+'">'+(mark?'<span>'+(mark.type==='HW'?'▲':'▽')+'</span>':'')+'</div>');
     labs.push('<span>'+(new Date(t).getHours()%3===0?hh(t):'')+'</span>')}
-  for(let i=0;i<=21;i++){const avg=(vals[i].v+vals[i+1].v+vals[i+2].v)/3;if(vals[i].t+3*H<now())continue;if(!best||avg>best.avg)best={avg,a:vals[i].t,b:vals[i].t+3*H}}
-  return{html:'<div class="tl">'+cols.join('')+'</div><div class="tlx">'+labs.join('')+'</div><div class="dim" style="font-size:11px;margin-top:4px">▲ high water ▽ low water</div>',best}}
+  for(let i=0;i<=21;i++){const avg=(vals[i].v+vals[i+1].v+vals[i+2].v)/3;if(!best||avg>best.avg)best={avg,a:vals[i].t,b:vals[i].t+3*H}}
+  return{html:'<div class="tl">'+cols.join('')+'</div><div class="tlx">'+labs.join('')+'</div><div class="dim" style="font-size:13px;margin-top:6px">▲ high water &nbsp; ▽ low water</div>',best}}
+function bestWindow(from,to,fn){let best=null;for(let t=from;t+2*H<=to;t+=H){const a=(fn(t)+fn(t+H)+fn(t+2*H))/3;if(!best||a>best.avg)best={avg:a,a:t,b:t+3*H}}return best}
+function wxNote(c){return c.W.ok?'':'<div class="note">No weather forecast this far ahead yet. Using the tide, light, season and average sea temperature only.</div>'}
 
-function renderNow(c){const O=overall(c),T=c.T,W=c.W,Lt=light(c.t);
-  const tl=timeline(t=>overall(ctxAt(t)).r,v=>v>1.5?'#7ee081':v>1.05?'#a6e3a1':v>.7?'#ffd166':'#ff8a80',2.2);
-  const ex=extremes(c.t,26).slice(0,4);
-  $('vNow').innerHTML=
-   '<div class="card"><div style="font-size:16px">Fishing right now: <span class="pill" style="background:'+O.lab[1]+'">'+O.lab[0]+'</span></div><ul class="r">'+O.reasons.map(r=>'<li class="'+r[0]+'">'+r[1]+'</li>').join('')+'</ul></div>'+
-   '<h3>Next 24 hours</h3><div class="card">'+tl.html+(tl.best?'<div style="margin-top:8px">⭐ Best window: <b>'+fmtWin(tl.best.a,tl.best.b)+'</b></div>':'')+'<div class="dim" style="font-size:12px">Uses the hourly wind and pressure forecast plus the tide.</div></div>'+
-   '<h3>Tides</h3><div class="card">'+tideStage(T)+', <b>'+T.h.toFixed(2)+' m</b> and '+(T.rising?'rising':'falling')+'. '+(T.springs>.6?'Spring tides: big range, strong flow.':T.springs<.25?'Neap tides: small range, gentle flow.':'Mid-cycle tides.')+
-     '<table style="margin-top:6px">'+ex.map(e=>'<tr><td>'+(e.type==='HW'?'High water':'Low water')+'</td><td><b>'+new Date(e.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'})+'</b> · '+e.h.toFixed(1)+' m</td></tr>').join('')+'</table>'+
-     '<small>Source: '+T.src+'. Heights above chart datum, approximate.</small></div>'+
-   '<h3>Weather &amp; sea</h3><div class="card"><table>'+
-     (W.ok?'<tr><td>Sky</td><td>'+WXCODE(W.code).join(' ')+', '+Math.round(W.temp)+'°C air, '+W.cloud+'% cloud'+(W.rain?', '+W.rain+' mm rain':'')+'</td></tr>'+
-     '<tr><td>Wind</td><td>'+W.dir+' '+Math.round(W.ws)+' mph, gusting '+Math.round(W.wg)+' ('+(W.onshore?'onshore':W.offshore?'offshore':'cross-shore')+')</td></tr>'+
-     '<tr><td>Pressure</td><td>'+Math.round(W.p)+' hPa, '+(W.dp>0?'+':'')+W.dp.toFixed(1)+' in 6h</td></tr>':'<tr><td>Weather</td><td>No live data yet</td></tr>')+
-     '<tr><td>Sea</td><td>'+W.sst.toFixed(1)+'°C'+(W.sstEst?' (seasonal average)':'')+(W.wave!=null?', waves '+W.wave.toFixed(1)+' m':'')+'</td></tr>'+
-     '<tr><td>Sun</td><td>Rise '+hm(Lt.s.rise)+' · set '+hm(Lt.s.set)+'</td></tr><tr><td>Moon</td><td>'+moonName(moonAge(c.t))+' ('+moonAge(c.t).toFixed(1)+' days)</td></tr></table></div>'+
-   '<h3>In season now</h3><div class="card">'+Object.keys(FISH).filter(k=>FISH[k].m.includes(c.mo)&&!FISH[k].junk).map(k=>FISH[k].name).join(', ')+'</div>'+
-   '<h3>Live data</h3><div class="card">'+Object.keys(FEEDS).map(k=>{const ok=D[k]&&!D.err[k],st=D[k]&&D.err[k];
-     return '<div style="margin-bottom:4px">'+(ok?'✅':st?'🟠':'❌')+' '+FEEDS[k].name+'<br><small>'+(ok?'Updated '+ago(D.T[k]):st?'Saved data from '+ago(D.T[k])+' ('+D.err[k]+')':D.err[k]?'Failed: '+D.err[k]:'Loading…')+'</small></div>'}).join('')+
-     '<button class="plain" id="refreshBtn">Refresh</button></div>'+
-   '<div class="card" style="border:1px solid #5a4a20"><b>⚠️ Safety</b><br><small>The tide floods fast across the Shoebury flats and can cut you off. Don\'t follow the water out over the mud, and know your way back before the flood starts. Parts of the beach next to the MOD ranges are off-limits: obey the signs and red flags.</small></div>'+
-   '<p class="dim" style="font-size:11px">Weather &amp; marine data: Open-Meteo.com (CC BY 4.0). This uses Environment Agency tide gauge data from the real-time data API (Beta). Guide only, not for navigation.</p>';
-  $('refreshBtn').onclick=()=>{$('refreshBtn').textContent='Refreshing…';refresh()}}
-
-function chipRow(key,opts,label){return '<h3>'+label+'</h3><div class="chips">'+Object.keys(opts).map(k=>'<button class="chip'+(SET[key]===k?' sel':'')+'" data-k="'+key+'" data-v="'+k+'">'+opts[k].name+'<small>'+opts[k].note+'</small></button>').join('')+'</div>'}
-function fishCard(r,showFix){const f=FISH[r.k],ch=chance(r.s),lim=r.fac.filter(x=>x.v<.6).sort((a,b)=>a.v-b.v);
-  return '<div class="fish"><div class="top"><span class="name">'+f.name+'</span><span class="pill" style="background:'+(f.junk?'#8ea6c0':ch[1])+'">'+(f.junk?(r.s>.1?'Likely':'Some'):ch[0])+'</span></div>'+
-   '<div class="meter"><i style="width:'+Math.min(100,r.s/1.6*100)+'%;background:'+(f.junk?'#8ea6c0':ch[1])+'"></i></div>'+
-   (showFix&&lim.length?'<div class="fix">Holding you back: '+lim.slice(0,3).map(x=>'<b>'+x.k+'</b> ('+x.fix+')').join('; ')+'</div>':'')+
-   (f.junk?'<div class="fix">'+f.note+'</div>':'')+'</div>'}
-function renderSetup(c){const A=assess(SET,c);
-  const tl=timeline(t=>assess(SET,ctxAt(t)).tot,v=>v>1.2?'#7ee081':v>.6?'#a6e3a1':v>.25?'#ffd166':'#ff8a80',0);
-  const hooks={};HOOKS.forEach((h,i)=>hooks[h]={name:'Size '+h,note:['tiny','small','small','medium','medium','large','large','huge'][i]});
-  const act=A.tot>1.2?['Busy','#7ee081']:A.tot>.6?['Steady','#a6e3a1']:A.tot>.25?['Slow','#ffd166']:['Very slow','#ff8a80'];
-  $('vSetup').innerHTML='<h2>What will I catch?</h2><div class="card setline">'+setText(SET)+'<br>Expect: <span class="pill" style="background:'+act[1]+'">'+act[0]+'</span> fishing right now</div>'+
-   '<h3>Likely catches right now</h3>'+(A.list.filter(r=>r.s>.02).map(r=>fishCard(r,true)).join('')||'<div class="card">Nothing much with this setup right now. Try the ⭐ Best setup tab.</div>')+
-   (A.list.filter(r=>r.s<=.02&&!FISH[r.k].junk).length?'<div class="dim" style="font-size:12px;margin-bottom:8px">Very unlikely with this setup: '+A.list.filter(r=>r.s<=.02&&!FISH[r.k].junk).map(r=>FISH[r.k].name).join(', ')+'</div>':'')+
-   '<h3>This setup over the next 24 hours</h3><div class="card">'+tl.html+(tl.best?'<div style="margin-top:8px">⭐ Best time to use it: <b>'+fmtWin(tl.best.a,tl.best.b)+'</b></div>':'')+'</div>'+
-   '<h3>Change your setup</h3>'+chipRow('rig',RIGS,'Rig')+chipRow('hook',hooks,'Hook size')+chipRow('bait',BAITS,'Bait')+chipRow('dist',DISTS,'Casting distance')+(RIGS[SET.rig].float?'':chipRow('lead',LEADS,'Lead'));
-  document.querySelectorAll('#vSetup .chip').forEach(b=>b.onclick=()=>{SET[b.dataset.k]=b.dataset.v;if(RIGS[SET.rig].float&&SET.dist==='far')SET.dist='mid';saveSet();const y=$('vSetup').parentNode.scrollTop;renderSetup(ctxAt(now()));$('vSetup').parentNode.scrollTop=y})}
-function renderBest(c){const B=bestSetups(c);
-  const useBtn=(s,i)=>'<button class="use" data-s=\''+JSON.stringify(s)+'\'>Use this setup</button>';
-  const top=B.most[0];
-  $('vBest').innerHTML='<h2>Recommended right now</h2>'+
-   '<div class="card"><div class="dim" style="font-size:12px">🏆 MOST BITES</div><div class="setline" style="margin:4px 0">'+setText(top.set)+'</div>'+
-     'Mostly: '+top.A.list.filter(r=>!FISH[r.k].junk&&r.s>.06).slice(0,3).map(r=>FISH[r.k].name+' ('+chance(r.s)[0].toLowerCase()+')').join(', ')+'<br>'+useBtn(top.set)+'</div>'+
-   (B.big&&JSON.stringify(B.big.set)!==JSON.stringify(top.set)?'<div class="card"><div class="dim" style="font-size:12px">💪 BEST FOR A BIGGER FISH</div><div class="setline" style="margin:4px 0">'+setText(B.big.set)+'</div>'+
-     'Targets: '+B.big.A.list.filter(r=>!FISH[r.k].junk&&r.s>.03).sort((a,b)=>FISH[b.k].w[1]-FISH[a.k].w[1]).slice(0,3).map(r=>FISH[r.k].name).join(', ')+'<br>'+useBtn(B.big.set)+'</div>':'')+
-   B.most.slice(1).map((r,i)=>'<div class="card"><div class="dim" style="font-size:12px">ALTERNATIVE '+(i+1)+'</div><div class="setline" style="margin:4px 0">'+setText(r.set)+'</div>'+useBtn(r.set)+'</div>').join('')+
+// ---------- tabs ----------
+const TABS={
+ now:['🌊 Now',c=>{const O=overall(c),T=c.T,W=c.W;
+   return wxNote(c)+'<div class="card"><div class="big">Fishing: <span class="pill" style="background:'+O.lab[1]+'">'+O.lab[0]+'</span></div><ul class="r">'+O.reasons.map(r=>'<li class="'+r[0]+'">'+r[1]+'</li>').join('')+'</ul></div>'+
+   '<div class="tiles">'+
+   '<div class="tile"><div>Tide</div><b>'+T.h.toFixed(1)+' m '+(T.rising?'↑':'↓')+'</b><small>'+tideStage(T)+'</small></div>'+
+   '<div class="tile"><div>Next</div><b>'+(T.nextType==='HW'?'High ':'Low ')+hm(T.nextT)+'</b><small>'+T.nextH.toFixed(1)+' m</small></div>'+
+   '<div class="tile"><div>Wind</div><b>'+(W.ok?W.dir+' '+Math.round(W.ws)+' mph':'–')+'</b><small>'+(W.ok?(W.onshore?'Onshore':W.offshore?'Offshore':'Cross-shore')+', gusts '+Math.round(W.wg):'no forecast')+'</small></div>'+
+   '<div class="tile"><div>Sky</div><b>'+(W.ok?WXCODE(W.code).join(' '):'–')+'</b><small>'+(W.ok?Math.round(W.temp)+'°C air':'')+'</small></div>'+
+   '<div class="tile"><div>Pressure</div><b>'+(W.ok?Math.round(W.p)+(W.dp<=-1?' ↓':W.dp>=1?' ↑':' →'):'–')+'</b><small>'+(W.ok?(W.dp>0?'+':'')+W.dp.toFixed(1)+' hPa in 6h':'')+'</small></div>'+
+   '<div class="tile"><div>Sea</div><b>'+W.sst.toFixed(0)+'°C</b><small>'+(W.wave!=null?'Waves '+W.wave.toFixed(1)+' m':W.sstEst?'Seasonal average':'')+'</small></div>'+
+   '<div class="tile"><div>Light</div><b>'+{day:'☀️ Day',dawn:'🌅 Dawn',dusk:'🌇 Dusk',night:'🌙 Night'}[c.L]+'</b><small>Sunset '+hm(light(c.t).s.set)+'</small></div>'+
+   '<div class="tile"><div>Moon</div><b>'+moonName(moonAge(c.t))+'</b><small>'+(T.springs>.6?'Spring tides':T.springs<.25?'Neap tides':'Mid-cycle tides')+'</small></div></div>'+
+   '<h3>In season</h3><div class="card">'+Object.keys(FISH).filter(k=>FISH[k].m.includes(c.mo)&&!FISH[k].junk).map(k=>FISH[k].name).join(', ')+'</div>'}],
+ tides:['🌙 Tides',c=>{const T=c.T,ex=extremes(c.t-H,50).slice(0,8);
+   const tl=timeline(Math.floor(c.t/H)*H,t=>tideAt(t),()=>'#3f8fd0',6.5);
+   return '<h2>Tides</h2><div class="card big">'+tideStage(T)+'<br><b>'+T.h.toFixed(2)+' m</b> and '+(T.rising?'rising':'falling')+'</div>'+
+   '<div class="card">'+(T.springs>.6?'<b>Spring tides</b>: big range and strong flow. Use grip leads, and expect the water to come in fast over the flats.':T.springs<.25?'<b>Neap tides</b>: small range and gentle flow. Plain leads hold fine.':'<b>Mid-cycle tides</b>: moderate range and flow.')+'</div>'+
+   '<h3>Tide times</h3><div class="card"><table>'+ex.map(e=>'<tr><td class="k">'+(e.type==='HW'?'High water':'Low water')+'</td><td><b>'+new Date(e.t).toLocaleString('en-GB',{weekday:'short',hour:'2-digit',minute:'2-digit'})+'</b> · '+e.h.toFixed(1)+' m</td></tr>').join('')+'</table></div>'+
+   '<h3>Height, next 24 hours</h3><div class="card">'+tl.html+'</div>'+
+   '<p class="dim" style="font-size:14px">Source: '+T.src+'. Heights are approximate, above chart datum.</p>'}],
+ weather:['🌬️ Weather',c=>{const W=c.W,Lt=light(c.t),rows=[];
+   for(let i=0;i<12;i++){const t=Math.floor(c.t/H)*H+i*H,w=wxRaw(t),O=overall(ctxAt(t));
+     rows.push('<tr><td class="k">'+hh(t)+':00</td><td>'+(w?WXCODE(w.code)[0]+' '+compass(w.wd)+' '+Math.round(w.ws)+' mph · '+Math.round(w.p)+' hPa':'–')+'</td><td style="text-align:right"><span class="pill" style="background:'+rateCol(O.r)+';font-size:13px">'+rateLab(O.r)+'</span></td></tr>')}
+   return '<h2>Weather &amp; sea</h2>'+wxNote(c)+'<div class="card"><table>'+
+   (W.ok?'<tr><td class="k">Sky</td><td>'+WXCODE(W.code).join(' ')+', '+W.cloud+'% cloud'+(W.rain?', '+W.rain+' mm rain':'')+'</td></tr>'+
+   '<tr><td class="k">Air</td><td>'+Math.round(W.temp)+'°C</td></tr>'+
+   '<tr><td class="k">Wind</td><td>'+W.dir+' '+Math.round(W.ws)+' mph, gusting '+Math.round(W.wg)+'<br><small>'+(W.onshore?'Onshore at Shoebury: colours the water':W.offshore?'Offshore at Shoebury: flattens the sea, helps casting':'Cross-shore')+'</small></td></tr>'+
+   '<tr><td class="k">Pressure</td><td>'+Math.round(W.p)+' hPa<br><small>'+(W.dp>0?'+':'')+W.dp.toFixed(1)+' in the last 6 hours</small></td></tr>':'')+
+   '<tr><td class="k">Sea temp</td><td>'+W.sst.toFixed(1)+'°C'+(W.sstEst?' <small>(seasonal average)</small>':'')+'</td></tr>'+
+   (W.wave!=null?'<tr><td class="k">Waves</td><td>'+W.wave.toFixed(1)+' m</td></tr>':'')+
+   '<tr><td class="k">Sunrise</td><td>'+hm(Lt.s.rise)+'</td></tr><tr><td class="k">Sunset</td><td>'+hm(Lt.s.set)+'</td></tr>'+
+   '<tr><td class="k">Moon</td><td>'+moonName(moonAge(c.t))+' ('+moonAge(c.t).toFixed(1)+' days)</td></tr></table></div>'+
+   '<h3>Next 12 hours</h3><div class="card"><table>'+rows.join('')+'</table></div>'}],
+ times:['⏰ Best times',c=>{const t0=Math.floor(c.t/H)*H,tl=timeline(t0,t=>overall(ctxAt(t)).r,rateCol,2.2);
+   const days=[];for(let d=0;d<8;d++){const a=dayStart(now(),d),b=a+24*H,from=Math.max(a,d===0?Math.floor(now()/H)*H:a);if(from+3*H>b)continue;
+     const bw=bestWindow(from,b,t=>overall(ctxAt(t)).r);
+     days.push('<button class="dayrow" data-t="'+bw.a+'"><div><div class="d">'+fmtDay(a)+'</div><small>Best: '+fmtWin(bw.a,bw.b)+(hasWx(bw.a)?'':' · tide &amp; light only')+'</small></div><span class="pill" style="background:'+rateCol(bw.avg)+'">'+rateLab(bw.avg)+'</span></button>')}
+   return '<h2>Best times</h2><h3>From '+hh(t0)+':00 on '+fmtDay(t0)+'</h3><div class="card">'+tl.html+(tl.best?'<div class="big" style="margin-top:10px">⭐ Best window: <b>'+fmtWin(tl.best.a,tl.best.b)+'</b></div>':'')+'</div>'+
+   '<h3>Week planner</h3><p class="dim" style="font-size:14px;margin-top:0">Tap a day to jump to its best time.</p>'+days.join('')}],
+ catch:['🎣 My catch',c=>{const A=assess(SET,c);
+   const act=A.tot>1.2?['Busy','#7ee081']:A.tot>.6?['Steady','#a6e3a1']:A.tot>.25?['Slow','#ffd166']:['Very slow','#ff8a80'];
+   const tl=timeline(Math.floor(c.t/H)*H,t=>assess(SET,ctxAt(t)).tot,v=>v>1.2?'#7ee081':v>.6?'#a6e3a1':v>.25?'#ffd166':'#ff8a80',0);
+   const unl=A.list.filter(r=>r.s<=.02&&!FISH[r.k].junk);
+   return '<h2>What will I catch?</h2>'+wxNote(c)+'<div class="card setline">'+setText(SET)+'<div style="margin-top:8px">Expect: <span class="pill" style="background:'+act[1]+'">'+act[0]+'</span></div><button class="plain" data-go="tackle" style="margin-top:10px">Change tackle</button></div>'+
+   '<h3>Likely catches</h3>'+(A.list.filter(r=>r.s>.02).map(fishCard).join('')||'<div class="card">Nothing much with this setup. Try the ⭐ Recommended tab.</div>')+
+   (unl.length?'<p class="dim" style="font-size:15px">Very unlikely: '+unl.map(r=>FISH[r.k].name).join(', ')+'</p>':'')+
+   '<h3>This setup over 24 hours</h3><div class="card">'+tl.html+(tl.best?'<div class="big" style="margin-top:10px">⭐ Best time: <b>'+fmtWin(tl.best.a,tl.best.b)+'</b></div>':'')+'</div>'}],
+ tackle:['🧰 Tackle',c=>{const hooks={};HOOKS.forEach((h,i)=>hooks[h]={name:'Size '+h,note:['tiny','small','small','medium','medium','large','large','huge'][i]});
+   return '<h2>Your tackle</h2><div class="card setline">'+setText(SET)+'<br><button class="use" data-go="catch">See what I\'ll catch →</button></div>'+
+   chipRow('rig',RIGS,'Rig')+chipRow('hook',hooks,'Hook size')+chipRow('bait',BAITS,'Bait')+chipRow('dist',DISTS,'Casting distance')+(RIGS[SET.rig].float?'':chipRow('lead',LEADS,'Lead'))}],
+ best:['⭐ Recommended',c=>{const B=bestSetups(c),top=B.most[0];
+   const useBtn=s=>'<button class="use" data-s=\''+JSON.stringify(s)+'\'>Use this setup</button>';
+   return '<h2>Recommended</h2>'+wxNote(c)+
+   '<div class="card"><div class="dim">🏆 MOST BITES</div><div class="setline" style="margin:6px 0">'+setText(top.set)+'</div>Mostly: '+top.A.list.filter(r=>!FISH[r.k].junk&&r.s>.06).slice(0,3).map(r=>FISH[r.k].name+' ('+chance(r.s)[0].toLowerCase()+')').join(', ')+'<br>'+useBtn(top.set)+'</div>'+
+   (B.big&&JSON.stringify(B.big.set)!==JSON.stringify(top.set)?'<div class="card"><div class="dim">💪 BIGGER FISH</div><div class="setline" style="margin:6px 0">'+setText(B.big.set)+'</div>Targets: '+B.big.A.list.filter(r=>!FISH[r.k].junk&&r.s>.03).sort((a,b)=>FISH[b.k].w[1]-FISH[a.k].w[1]).slice(0,3).map(r=>FISH[r.k].name).join(', ')+'<br>'+useBtn(B.big.set)+'</div>':'')+
    '<h3>Target a species</h3>'+Object.entries(B.species).sort((a,b)=>b[1].s-a[1].s).map(([k,b])=>{const ch=chance(b.s);
-     return '<div class="fish"><div class="top"><span class="name">'+FISH[k].name+'</span><span class="pill" style="background:'+ch[1]+'">'+ch[0]+'</span></div><div class="setline" style="font-size:13px;margin-top:4px">'+setText(b.set)+'</div>'+useBtn(b.set)+'</div>'}).join('')+
-   '<p class="dim" style="font-size:12px">Chances are worked out from the live tide, light, wind, pressure, sea state and water temperature at Shoebury, compared across every combination of rig, hook, bait, distance and lead.</p>';
-  document.querySelectorAll('#vBest .use').forEach(b=>b.onclick=()=>{SET=JSON.parse(b.dataset.s);saveSet();go('vSetup')})}
-function renderSpecies(c){
-  $('vSpecies').innerHTML='<h2>Shoebury species guide</h2>'+Object.keys(FISH).map(k=>{const f=FISH[k],tp=tipsFor(f),inS=f.m.includes(c.mo);
-    return '<div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:15px">'+f.name+'</b>'+(inS?'<span class="pill" style="background:#7ee081">In season</span>':'<span class="dim" style="font-size:12px">Out of season</span>')+'</div>'+
-    '<p style="margin:6px 0;font-size:13.5px">'+f.note+'</p><table>'+
-    '<tr><td>Season</td><td>'+MONTHS[f.m[0]-1]+'–'+MONTHS[f.m[f.m.length-1]-1]+(f.peak?' (best '+f.peak.map(m=>MONTHS[m-1]).join(', ')+')':'')+'</td></tr>'+
-    (f.junk?'':'<tr><td>Best baits</td><td>'+tp.baits.join(', ')+'</td></tr><tr><td>Hooks</td><td>'+tp.hooks+'</td></tr><tr><td>Rig</td><td>'+(tp.rigs.join(' or ')||'float')+'</td></tr>'+
-    '<tr><td>Where</td><td>'+tp.dist+'</td></tr><tr><td>When</td><td>'+tp.time+(f.spr?', bigger tides':'')+(f.col?', coloured water':'')+'</td></tr><tr><td>Water temp</td><td>'+f.tp[0]+'–'+f.tp[1]+'°C</td></tr>'+
-    '<tr><td>Typical size</td><td>'+f.w[0]+'–'+f.w[1]+' kg</td></tr>')+'</table></div>'}).join('')}
+     return '<div class="fish"><div class="top"><span class="name">'+FISH[k].name+'</span><span class="pill" style="background:'+ch[1]+'">'+ch[0]+'</span></div><div class="setline" style="margin-top:6px;font-size:16px">'+setText(b.set)+'</div>'+useBtn(b.set)+'</div>'}).join('')+
+   '<p class="dim" style="font-size:14px">Worked out from the tide, light, wind, pressure, sea state and water temperature at the chosen time, across every combination of rig, hook, bait, distance and lead.</p>'}],
+ species:['🐟 Species',c=>'<h2>Species guide</h2>'+Object.keys(FISH).map(k=>{const f=FISH[k],tp=tipsFor(f),inS=f.m.includes(c.mo);
+   return '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">'+f.name+'</b>'+(inS?'<span class="pill" style="background:#7ee081">In season</span>':'<span class="dim" style="font-size:14px">Out of season</span>')+'</div>'+
+   '<p style="margin:8px 0">'+f.note+'</p><table>'+
+   '<tr><td class="k">Season</td><td>'+MONTHS[f.m[0]-1]+'–'+MONTHS[f.m[f.m.length-1]-1]+(f.peak?'<br><small>best '+f.peak.map(m=>MONTHS[m-1]).join(', ')+'</small>':'')+'</td></tr>'+
+   (f.junk?'':'<tr><td class="k">Baits</td><td>'+tp.baits.join(', ')+'</td></tr><tr><td class="k">Hooks</td><td>'+tp.hooks+'</td></tr><tr><td class="k">Rig</td><td>'+(tp.rigs.join(' or ')||'float')+'</td></tr>'+
+   '<tr><td class="k">Where</td><td>'+tp.dist+'</td></tr><tr><td class="k">When</td><td>'+tp.time+(f.spr?', bigger tides':'')+(f.col?', coloured water':'')+'</td></tr><tr><td class="k">Water</td><td>'+f.tp[0]+'–'+f.tp[1]+'°C</td></tr>'+
+   '<tr><td class="k">Size</td><td>'+f.w[0]+'–'+f.w[1]+' kg</td></tr>')+'</table></div>'}).join('')],
+ data:['📡 Data',c=>'<h2>Live data &amp; safety</h2><div class="card">'+Object.keys(FEEDS).map(k=>{const ok=D[k]&&!D.err[k],st=D[k]&&D.err[k];
+     return '<div style="margin-bottom:10px">'+(ok?'✅':st?'🟠':'❌')+' '+FEEDS[k].name+'<br><small>'+(ok?'Updated '+ago(D.T[k]):st?'Saved data from '+ago(D.T[k])+' ('+D.err[k]+')':D.err[k]?'Failed: '+D.err[k]:'Loading…')+'</small></div>'}).join('')+
+   '<button class="plain" id="refreshBtn">Refresh now</button></div>'+
+   '<div class="card"><small>Forecasts reach about 7 days ahead. Further ahead than that, the app uses the tide model, daylight, season and average sea temperature.</small></div>'+
+   '<div class="note"><b>⚠️ Safety</b><br>The tide floods fast across the Shoebury flats and can cut you off. Don\'t follow the water out over the mud, and know your way back before the flood starts. Parts of the beach next to the MOD ranges are off-limits: obey the signs and red flags.</div>'+
+   '<p class="dim" style="font-size:13px">Weather &amp; marine data: Open-Meteo.com (CC BY 4.0). This uses Environment Agency tide gauge data from the real-time data API (Beta). Guide only, not for navigation.</p>']
+};
+function chipRow(key,opts,label){return '<h3>'+label+'</h3><div class="chips">'+Object.keys(opts).map(k=>'<button class="chip'+(SET[key]===k?' sel':'')+'" data-k="'+key+'" data-v="'+k+'">'+opts[k].name+'<small>'+opts[k].note+'</small></button>').join('')+'</div>'}
+function fishCard(r){const f=FISH[r.k],ch=chance(r.s),lim=r.fac.filter(x=>x.v<.6).sort((a,b)=>a.v-b.v),col=f.junk?'#9db3ca':ch[1];
+  return '<div class="fish"><div class="top"><span class="name">'+f.name+'</span><span class="pill" style="background:'+col+'">'+(f.junk?(r.s>.1?'Likely':'Some'):ch[0])+'</span></div>'+
+   '<div class="meter"><i style="width:'+Math.min(100,r.s/1.6*100)+'%;background:'+col+'"></i></div>'+
+   (!f.junk&&lim.length?'<div class="fix">Holding you back:<ul class="r" style="margin-top:2px">'+lim.slice(0,3).map(x=>'<li><b>'+x.k[0].toUpperCase()+x.k.slice(1)+'</b>: '+x.fix+'</li>').join('')+'</ul></div>':'')+
+   (f.junk?'<div class="fix">'+f.note+'</div>':'')+'</div>'}
 
-let cur='vNow';
-function go(v){cur=v;document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===v));render();document.querySelector('main').scrollTop=0}
-function render(){const c=ctxAt(now());header(c);({vNow:renderNow,vSetup:renderSetup,vBest:renderBest,vSpecies:renderSpecies})[cur](c)}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+// ---------- header: time controls + tabs ----------
+let cur='now';
+function renderHeader(){const t=vt(),live=selT==null,fut=t>now()+30*6e4;
+  $('tLabel').innerHTML='<b>'+fmtDay(t)+' '+new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+'</b> <span style="background:'+(live?'#7ee081':fut?'#ffd166':'#9db3ca')+'">'+(live?'LIVE':fut?'FORECAST':'EARLIER')+'</span><br><i>'+($('tpanel').hidden?'▾ tap to change day/time':'▴ close')+'</i>';
+  $('tLive').classList.toggle('on',live);
+  const sel=dayStart(t);let dh='';for(let d=0;d<8;d++){const a=dayStart(now(),d),dt=new Date(a);
+    dh+='<button data-day="'+a+'"'+(a===sel?' class="sel"':'')+'>'+(d===0?'Today':dt.toLocaleDateString('en-GB',{weekday:'short'}))+'<b>'+dt.getDate()+'</b></button>'}
+  $('days').innerHTML=dh;$('tHour').value=new Date(t).getHours();
+  $('tabs').innerHTML=Object.keys(TABS).map(k=>'<button data-tab="'+k+'"'+(k===cur?' class="on"':'')+'>'+TABS[k][0]+'</button>').join('');
+  const on=$('tabs').querySelector('.on');if(on)on.scrollIntoView({block:'nearest',inline:'nearest'})}
+function render(){renderHeader();const c=ctxAt(vt());$('main').innerHTML=TABS[cur][1](c);wire()}
+function go(tab){cur=tab;render();$('main').scrollTop=0}
+function wire(){
+  document.querySelectorAll('#main .chip').forEach(b=>b.onclick=()=>{SET[b.dataset.k]=b.dataset.v;if(RIGS[SET.rig].float&&SET.dist==='far')SET.dist='mid';saveSet();const y=$('main').scrollTop;render();$('main').scrollTop=y});
+  document.querySelectorAll('#main .use[data-s]').forEach(b=>b.onclick=()=>{SET=JSON.parse(b.dataset.s);saveSet();go('catch')});
+  document.querySelectorAll('#main [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  document.querySelectorAll('#main .dayrow').forEach(b=>b.onclick=()=>{cur='now';setTime(+b.dataset.t);$('main').scrollTop=0});
+  const rb=$('refreshBtn');if(rb)rb.onclick=()=>{rb.textContent='Refreshing…';refresh()}}
+$('tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)go(b.dataset.tab)};
+$('days').onclick=e=>{const b=e.target.closest('[data-day]');if(b)setTime(+b.dataset.day+new Date(vt()).getHours()*H)};
+$('tHour').oninput=e=>setTime(dayStart(vt())+(+e.target.value)*H);
+$('tPrev').onclick=()=>setTime(Math.floor(vt()/H)*H-H);
+$('tNext').onclick=()=>setTime(Math.floor(vt()/H)*H+H);
+$('tLive').onclick=()=>setTime(null);
+$('tLabel').onclick=()=>{$('tpanel').hidden=!$('tpanel').hidden;renderHeader()};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&now()-Math.max(D.T.wx||0,D.T.om||0)>10*6e4)refresh()});
 calibrate();render();refresh();setInterval(refresh,15*6e4);
-setInterval(()=>{const c=ctxAt(now());header(c);if(cur==='vNow')renderNow(c)},60000);
+setInterval(()=>{if(selT==null&&cur!=='tackle')render()},60000);
 </script>
 </body>
 </html>
