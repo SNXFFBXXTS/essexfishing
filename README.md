@@ -1,49 +1,50 @@
-# Shoebury Fishing Guide 🎣
+# Shoebury Fishing Planner
 
-A live, phone-friendly fishing guide for Shoebury East Beach (Thames Estuary).
-Open the GitHub Pages link on your phone and use "Add to Home screen".
+A trip planner for shore fishing at Shoebury East Beach (Thames Estuary), using live
+tide, weather and sea data. Open it on your phone and use "Add to Home screen".
 
 **https://snxffbxxts.github.io/essexfishing/**
 
-## What it does
-Use the **time bar** at the top to pick any day and hour up to about 7 days ahead
-(◀ ▶ step an hour, tap the time to choose a day or slide the hour, and **Live**
-jumps back to now). Every tab then shows that moment.
+## How to use it
+Tap the time bar at the top and set **when you're going** (a day up to a week
+ahead, your arrival time, and how long you're staying), or tap **Live** if you're
+going now. Every screen then works for that session.
 
-- **🌊 Now:** a fishing rating with reasons, plus tide, wind, sky, pressure,
-  sea, light and moon
-- **🌙 Tides:** tide stage, springs or neaps, the next 8 tide times, and a height chart
-- **🌬️ Weather:** detailed weather and sea, plus an hour-by-hour rating for the next 12 hours
-- **⏰ Best times:** a 24-hour rating chart, and a week planner with the best window
-  for each day (tap a day to jump there)
-- **🎣 My catch / 🧰 Tackle:** pick a rig, hook size, bait, casting distance and lead. It
-  shows what you're likely to catch with that setup right now, what's holding
-  each species back (for example "hook too small, use 2/0–4/0"), and the best
-  time in the next 24 hours to fish that setup.
-- **⭐ Recommended:** it tries every combination of tackle against the live
-  conditions and recommends the setup for the most bites and the one for a bigger
-  fish, plus the best setup for each fish that's in season. Tap "Use this
-  setup" to load it.
-- **🐟 Species:** a guide to each Shoebury species: season, baits, hooks, rigs,
-  where, when and water temperature.
+### Plan (main screen)
+- **Session rating**, the most productive hour, and the main target species
+- **What to do:** the tide on arrival, high and low water with the best periods,
+  sunset and sunrise effects, when to change setup, the lead to use, wind effects,
+  crabs, and rain
+- **Recommended setup** for the most bites, plus a second rod for bigger fish
+- **Hour by hour:** the tide, rating, wind, light, and the setup to fish each hour
+- **Expected catches** with chances, and the setup to use if you want to target
+  each species
+- **Conditions during the session:** tide, wind, air temperature, rain, cloud,
+  pressure, sea and light
+- **Better times to go** on the same day or later in the week, one tap to switch
+- **Kit list** (tick items off) with bait quantities worked out for your session
+- **Safety:** when the tide turns over the mud, dark hours, strong wind, MOD ranges
+
+### Other screens
+- **Conditions:** Overview, Tides (the next 8 tide times and a height chart),
+  Weather (hour by hour) and Week (the best window on each day)
+- **Catch:** *My setup* (pick a rig, hook, bait, distance and lead to see what
+  you'll catch and what's holding each fish back) and *By species* (the best setup
+  for each fish)
+- **Species:** a guide to each fish
+- **Data:** the status of each live feed, and how the predictions work
 
 ## Live data
-- Environment Agency Southend tide gauge, the observed level every 15 minutes
-- Open-Meteo marine: tide curve, waves and sea temperature. The game lines the
-  curve up against the gauge to get the next high and low waters.
-- Open-Meteo forecast: current and hourly wind, gusts, pressure, cloud and rain
-- If a feed fails, it falls back to saved data, then to a moon-based tide model
+- Environment Agency Southend tide gauge (observed level every 15 minutes)
+- Open-Meteo marine: tide curve, waves and sea temperature, lined up against the gauge
+- Open-Meteo forecast: wind, gusts, pressure, cloud, rain and temperature, hourly for about 7 days
+- If a feed fails, it falls back to saved data, then to an astronomical tide estimate
 
 ## Roadmap
-- [x] v0.1–0.2: live conditions engine (started out as a game)
-- [x] v0.3: switched to a guide app, with setup selection, catch predictions,
-  recommendations and a species guide
-- [ ] More tackle: bait cocktails (lug + squid), clipped-down rigs, bead and spoon attractors
-- [ ] More marks: Southend Pier, Thorpe Bay, Canvey and so on, each with its own
-  species, distances and snags
-- [ ] Your own catch diary, to log real catches against the conditions on the day
-- [x] v0.4: bigger text and more tabs; time bar to wind forward to any day or hour; week planner
+- [x] Live conditions engine; setup selection and catch predictions; species guide
+- [x] Time travel up to 7 days ahead; week planner
+- [x] Trip planner: session plan, hour-by-hour setups, kit list, safety, better times
+- [ ] More tackle: bait cocktails, clipped-down rigs, attractors
+- [ ] More marks: Southend Pier, Thorpe Bay, Canvey and so on
+- [ ] Catch diary, to log real catches against the conditions
 - [ ] Offline install (PWA)
-
-## Run locally
-It's a single `index.html` file. Open it in any browser.
