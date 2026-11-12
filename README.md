@@ -20,10 +20,14 @@ It runs in the browser. Open the GitHub Pages link on your phone, then use
 ## Roadmap
 - [x] **v0.1 Basics:** cast, bite, strike and fight loop; tackle box; shop; catch log;
   modelled tide, sun, moon and season; 11 Shoebury species plus crabs
-- [ ] **v0.2 Live weather:** wind speed and direction, pressure and sea state from
-  Open-Meteo (free, no API key). An onshore blow or a dropping barometer switches
-  fish on.
-- [ ] **v0.3 Real tide data:** swap the tide model for real predicted tide times
+- [x] **v0.2 Part 1, live conditions:**
+  - Real tides from the Environment Agency Southend gauge, lined up with the
+    Open-Meteo marine tide curve, which gives the next high and low waters
+  - Live wind, gusts, pressure trend, cloud, rain, waves and sea temperature
+  - A fishing rating with reasons (onshore wind, falling pressure, tide stage…)
+  - The scene shows live cloud, rain, fog, sea chop, coloured water, and a wind flag
+  - Headwinds shorten your cast, and strong wind nods the rod tip (false bites)
+  - Falls back to saved data, then to the moon-based tide model, if a feed fails
 - [ ] **v0.4 More tackle:** rods and reels, clipped-down rigs, bait cocktails,
   bait-collecting trips at low water (dig lug, gather peeler crab)
 - [ ] **v0.5 More marks:** Southend Pier, Thorpe Bay, Canvey and so on, each with
