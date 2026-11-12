@@ -1,7 +1,12 @@
-# Shoebury Fishing Planner
+# Essex Fishing Planner
 
-A trip planner for shore fishing at Shoebury East Beach (Thames Estuary), using live
-tide, weather and sea data. Open it on your phone and use "Add to Home screen".
+A trip planner for shore fishing on the Essex coast, using live tide, weather and
+sea data.
+
+**Marks:** Shoebury East, Thorpe Bay, Southend Pier, Westcliff/Chalkwell, Canvey
+(Concord Beach), Walton-on-the-Naze, Frinton and Clacton. Tap the mark name at the
+top to change it. Each mark has its own tide gauge and forecast point, onshore wind
+direction, low-water behaviour, casting distances, species mix and safety notes. Open it on your phone and use "Add to Home screen".
 
 **https://snxffbxxts.github.io/essexfishing/**
 
@@ -35,7 +40,8 @@ going now. Every screen then works for that session.
 - **Data:** the status of each live feed, and how the predictions work
 
 ## Live data
-- Environment Agency Southend tide gauge (observed level every 15 minutes)
+- Environment Agency tide gauges: Southend for the Thames marks, Harwich for Walton,
+  Frinton and Clacton (observed level every 15 minutes, timing adjusted per mark)
 - Open-Meteo marine: tide curve, waves and sea temperature, lined up against the gauge
 - Open-Meteo forecast: wind, gusts, pressure, cloud, rain and temperature, hourly for about 7 days
 - If a feed fails, it falls back to saved data, then to an astronomical tide estimate
@@ -45,6 +51,6 @@ going now. Every screen then works for that session.
 - [x] Time travel up to 7 days ahead; week planner
 - [x] Trip planner: session plan, hour-by-hour setups, kit list, safety, better times
 - [ ] More tackle: bait cocktails, clipped-down rigs, attractors
-- [ ] More marks: Southend Pier, Thorpe Bay, Canvey and so on
+- [x] Location picker with 8 Essex marks
 - [ ] Catch diary, to log real catches against the conditions
 - [ ] Offline install (PWA)

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b1726">
-<title>Shoebury Fishing Planner</title>
+<title>Essex Fishing Planner</title>
 <style>
 :root{--bg:#0b1726;--panel:#13243a;--panel2:#1a304c;--line:#22395a;--ink:#eef4fa;--dim:#9db3ca;--acc:#3fd0c9;--warn:#ffd166;--bad:#ff8a80;--good:#7ee081}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -14,7 +14,12 @@ body{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 a
 button{font:inherit;color:inherit;cursor:pointer}
 header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 12px}
 .hrow{display:flex;align-items:center;gap:8px}
-.ttl{flex:1;font-weight:700;font-size:17px}
+.ttl{flex:1;font-weight:700;font-size:17px;text-align:left;background:none;border:0;padding:4px 0}
+.ttl i{font-style:normal;color:var(--acc);font-size:14px;font-weight:400}
+#sitePanel{padding:6px 0 2px}
+.site{display:block;width:100%;text-align:left;background:var(--panel2);border:2px solid transparent;border-radius:10px;padding:8px 12px;margin-bottom:6px}
+.site.sel{border-color:var(--acc)}
+.site small{display:block;font-size:13px}
 #liveBtn{background:var(--panel2);border:1px solid #2c4a70;border-radius:10px;padding:6px 12px;font-size:14px;font-weight:700}
 #liveBtn.on{background:var(--acc);color:#06121f;border-color:var(--acc)}
 .when{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid #2c4a70;border-radius:12px;padding:8px 12px;margin-top:8px}
@@ -90,7 +95,8 @@ button.sec{background:var(--panel2);border:1px solid #2c4a70;border-radius:9px;p
 </head>
 <body>
 <header>
-  <div class="hrow"><div class="ttl">Shoebury East · fishing planner</div><button id="liveBtn">Live</button></div>
+  <div class="hrow"><button class="ttl" id="siteBtn"></button><button id="liveBtn">Live</button></div>
+  <div id="sitePanel" hidden></div>
   <button class="when" id="whenBtn"></button>
   <div id="whenPanel" hidden>
     <div class="lbl">Day</div><div class="hscroll" id="pDays"></div>
@@ -107,12 +113,47 @@ button.sec{background:var(--panel2);border:1px solid #2c4a70;border-radius:9px;p
 
 "use strict";
 // =====================================================================
-// LIVE DATA — Shoebury East (51.53N, 0.79E)
+// LIVE DATA — per fishing mark (see SITES)
 // EA Southend tide gauge (observed) calibrates the Open-Meteo marine tide
 // curve; Open-Meteo forecast gives wind/pressure/cloud/rain hour by hour.
 // Falls back to saved data, then an astronomical tide model.
 // =====================================================================
-const LAT=51.53,LON=0.79,SYN=29.530588853,NEWMOON=Date.UTC(2000,0,6,18,14),CD_OFF=2.9,H=3.6e6;
+const SYN=29.530588853,NEWMOON=Date.UTC(2000,0,6,18,14),H=3.6e6;
+// ---- fishing marks ----
+const MUD=(n)=>'The flood comes in fast over the '+n+' mud and can cut you off. Don\'t follow the water out; if you go onto the flats, be back above the tideline as soon as the tide turns.';
+const SIGNS='Some beaches restrict fishing during the summer bathing season or in marked areas. Follow local signs.';
+const SITES={
+ shoebury:{name:'Shoebury East',area:'Thames Estuary',lat:51.530,lon:0.790,mlat:51.50,mlon:0.85,gauge:'0019',gname:'Southend',goff:0,cd:2.9,on:[110,250],face:'south',spr:5.2,neap:3.2,mean:3.3,mlag:0,lowF:.25,dist:1,mud:1,sp:{},
+  ground:'Sand and shingle over mud flats that dry a long way out at low water.',lowNote:'the water is far out over the mud',safety:[MUD('Shoebury'),'Stay out of the MOD range areas: obey the signs and red flags.']},
+ thorpe:{name:'Thorpe Bay',area:'Thames Estuary',lat:51.531,lon:0.757,mlat:51.50,mlon:0.78,gauge:'0019',gname:'Southend',goff:0,cd:2.9,on:[110,250],face:'south',spr:5.2,neap:3.2,mean:3.3,mlag:0,lowF:.3,dist:1,mud:1,sp:{flounder:1.1,bass:1.1},
+  ground:'Shingle and sand with groynes, over mud flats that dry a long way out at low water.',lowNote:'the water is far out over the mud',safety:[MUD('Thorpe Bay'),'Cast clear of moored boats and groynes.',SIGNS]},
+ pier:{name:'Southend Pier',area:'Thames Estuary',lat:51.506,lon:0.716,mlat:51.49,mlon:0.72,gauge:'0019',gname:'Southend',goff:0,cd:2.9,on:[110,250],face:'south (pier head)',spr:5.2,neap:3.2,mean:3.3,mlag:0,lowF:.7,dist:.55,mud:0,
+  sp:{flounder:.6,mackerel:1.6,garfish:1.5,thornback:1.3,cod:1.4,whiting:1.2,bass:.9,smoothhound:1.2,crab:1.2},
+  ground:'Fishing from the pier head into deep water. A short cast reaches the channel, so long casting matters less.',lowNote:'low water, but the pier head still has depth',
+  safety:['Check the pier opening times, fishing areas and ticket or permit rules before you go; they change through the year.','Take a drop net to land bigger fish rather than lifting them up the side.','The pier can be busy: look behind you before casting.']},
+ westcliff:{name:'Westcliff / Chalkwell',area:'Thames Estuary',lat:51.536,lon:0.680,mlat:51.50,mlon:0.70,gauge:'0019',gname:'Southend',goff:5,cd:2.9,on:[110,250],face:'south',spr:5.2,neap:3.2,mean:3.3,mlag:.08,lowF:.25,dist:1,mud:1,
+  sp:{flounder:1.3,eel:1.3,bass:1.1,cod:.8,thornback:.8},
+  ground:'Sea wall and beaches over wide mud flats. Deep enough water only for a few hours around high tide.',lowNote:'the water is far out over the mud',safety:[MUD('Westcliff'),'The promenade is busy: look behind you before casting.',SIGNS]},
+ canvey:{name:'Canvey (Concord Beach)',area:'Thames Estuary',lat:51.516,lon:0.600,mlat:51.495,mlon:0.62,gauge:'0019',gname:'Southend',goff:10,cd:2.9,on:[100,240],face:'south',spr:5.3,neap:3.3,mean:3.35,mlag:.17,lowF:.35,dist:1,mud:1,
+  sp:{flounder:1.4,eel:1.3,bass:1.1,thornback:.8,cod:.8,smoothhound:.9,sole:.9,whiting:.9},
+  ground:'Sea wall and a small beach facing the main shipping channel, with mud at low water.',lowNote:'the mud is exposed',
+  safety:['The sea wall steps are slippery when wet or weedy.',MUD('Canvey'),'Large ships pass close by, and their wash can surge up the beach without warning.']},
+ walton:{name:'Walton-on-the-Naze',area:'North Sea coast',lat:51.848,lon:1.272,mlat:51.85,mlon:1.33,gauge:'E71439',gname:'Harwich',goff:-10,cd:2.0,on:[30,170],face:'east',spr:3.8,neap:2.3,mean:2.3,mlag:-1,lowF:.6,dist:1,mud:0,
+  sp:{thornback:1.5,bass:1.4,smoothhound:1.3,sole:1.2,dab:1.2,cod:1.2,flounder:.6,eel:.5,garfish:1.3,mackerel:1.5},
+  ground:'Open North Sea beach with groynes. The Naze end has rough, snaggy ground.',lowNote:'it is low water on the open beach',
+  safety:['Groynes and rough ground are snaggy and slippery. Carry spare rigs.','Keep away from the base of the Naze cliffs: they erode and fall.',SIGNS]},
+ frinton:{name:'Frinton-on-Sea',area:'North Sea coast',lat:51.830,lon:1.247,mlat:51.82,mlon:1.31,gauge:'E71439',gname:'Harwich',goff:-15,cd:2.0,on:[60,200],face:'south-east',spr:3.8,neap:2.3,mean:2.3,mlag:-1.1,lowF:.6,dist:1,mud:0,
+  sp:{thornback:1.4,bass:1.3,smoothhound:1.2,sole:1.2,dab:1.2,cod:1.1,flounder:.6,eel:.5,garfish:1.2,mackerel:1.4},
+  ground:'Sandy beach with groynes below the sea wall.',lowNote:'it is low water on the open beach',safety:['Groynes are slippery and snaggy. Cast clear of them.',SIGNS]},
+ clacton:{name:'Clacton-on-Sea',area:'North Sea coast',lat:51.786,lon:1.153,mlat:51.77,mlon:1.20,gauge:'E71439',gname:'Harwich',goff:-25,cd:2.0,on:[80,220],face:'south-east',spr:3.9,neap:2.3,mean:2.3,mlag:-1.25,lowF:.6,dist:1,mud:0,
+  sp:{thornback:1.4,bass:1.3,smoothhound:1.3,sole:1.2,dab:1.1,cod:1.1,flounder:.7,eel:.5,garfish:1.2,mackerel:1.3},
+  ground:'Sand and shingle beaches with groynes either side of the pier.',lowNote:'it is low water on the open beach',
+  safety:['Groynes are slippery and snaggy. Cast clear of them.','If you fish from Clacton Pier, check its opening times and fishing rules first.',SIGNS]}
+};
+let SITE_ID='shoebury';try{const s=localStorage.getItem('sfish-site');if(s&&SITES[s])SITE_ID=s}catch(e){}
+let SITE=SITES[SITE_ID];
+const angIn=(d,a,b)=>{d=((d%360)+360)%360;a=((a%360)+360)%360;b=((b%360)+360)%360;return a<=b?d>=a&&d<=b:d>=a||d<=b};
+
 const now=()=>Date.now();
 const month=t=>new Date(t).getMonth()+1;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -122,32 +163,34 @@ const ago=t=>{const m=Math.round((now()-t)/6e4);return m<1?'just now':m<60?m+' m
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const moonAge=t=>(((t-NEWMOON)/864e5)%SYN+SYN)%SYN;
-function modelH(t){const a=moonAge(t),amp=2.05+0.55*Math.cos(2*Math.PI*(a-1.5)/(SYN/2)),Hm=((t/H)%24)-12-a*24/SYN;return 3.3+amp*Math.cos(2*Math.PI*(Hm-0.15)/12)}
+function modelH(t){const a=moonAge(t),amp=(SITE.spr+SITE.neap)/4+(SITE.spr-SITE.neap)/4*Math.cos(2*Math.PI*(a-1.5)/(SYN/2)),Hm=((t/H)%24)-12-a*24/SYN;return SITE.mean+amp*Math.cos(2*Math.PI*(Hm-0.15-SITE.mlag)/12)}
 
 const WXVARS='temperature_2m,precipitation,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code';
 const FEEDS={
-  ea:{name:'Southend tide gauge (Environment Agency)',
-      url:'https://environment.data.gov.uk/flood-monitoring/id/stations/0019/readings?_sorted&_limit=120',
-      parse:j=>{const a=(j.items||[]).filter(r=>typeof r.value==='number').map(r=>({t:Date.parse(r.dateTime),v:r.value+CD_OFF})).sort((x,y)=>x.t-y.t);
+  ea:{get name(){return SITE.gname+' tide gauge (Environment Agency)'},
+      url:()=>'https://environment.data.gov.uk/flood-monitoring/id/stations/'+SITE.gauge+'/readings?_sorted&_limit=120',
+      parse:j=>{const a=(j.items||[]).filter(r=>typeof r.value==='number').map(r=>({t:Date.parse(r.dateTime)+SITE.goff*6e4,v:r.value+SITE.cd})).sort((x,y)=>x.t-y.t);
         if(a.length<8)throw Error('no recent readings');return a}},
   om:{name:'Tide curve, waves & sea temp (Open-Meteo marine)',
-      url:'https://marine-api.open-meteo.com/v1/marine?latitude=51.50&longitude=0.85&hourly=sea_level_height_msl,wave_height,sea_surface_temperature&past_days=1&forecast_days=8&timeformat=unixtime&timezone=GMT&cell_selection=sea',
+      url:()=>'https://marine-api.open-meteo.com/v1/marine?latitude='+SITE.mlat+'&longitude='+SITE.mlon+'&hourly=sea_level_height_msl,wave_height,sea_surface_temperature&past_days=1&forecast_days=8&timeformat=unixtime&timezone=GMT&cell_selection=sea',
       parse:j=>{const h=j.hourly;if(!h||!h.time)throw Error('bad response');const sl=h.sea_level_height_msl||[];
         if(sl.filter(x=>x!=null).length<24)throw Error('no tide data for this spot');
         return{t:h.time.map(x=>x*1000),sl,wave:h.wave_height||[],sst:h.sea_surface_temperature||[]}}},
   wx:{name:'Wind, pressure, cloud & rain (Open-Meteo)',
-      url:'https://api.open-meteo.com/v1/forecast?latitude=51.53&longitude=0.79&current='+WXVARS+'&hourly='+WXVARS+'&past_hours=7&forecast_hours=170&wind_speed_unit=mph&timeformat=unixtime&timezone=GMT',
+      url:()=>'https://api.open-meteo.com/v1/forecast?latitude='+SITE.lat+'&longitude='+SITE.lon+'&current='+WXVARS+'&hourly='+WXVARS+'&past_hours=7&forecast_hours=170&wind_speed_unit=mph&timeformat=unixtime&timezone=GMT',
       parse:j=>{if(!j.current||!j.hourly)throw Error('bad response');const h=j.hourly;h.t=h.time.map(x=>x*1000);return{cur:j.current,h}}}
 };
 const D={err:{},T:{}};
-try{const c=JSON.parse(localStorage.getItem('sfish-data2'));if(c)for(const k in FEEDS)if(c[k]&&now()-c.T[k]<36*H){D[k]=c[k];D.T[k]=c.T[k]}}catch(e){}
-async function refresh(){
+function loadCache(){for(const k in FEEDS){D[k]=null;D.T[k]=0;D.err[k]=null}try{const c=JSON.parse(localStorage.getItem('sfish-data-'+SITE_ID));if(c)for(const k in FEEDS)if(c[k]&&now()-c.T[k]<36*H){D[k]=c[k];D.T[k]=c.T[k]}}catch(e){}}
+loadCache();
+async function refresh(){const sid=SITE_ID;
   await Promise.all(Object.keys(FEEDS).map(async k=>{
     try{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),12000);
-      const r=await fetch(FEEDS[k].url,{cache:'no-store',signal:ctl.signal});clearTimeout(to);
-      if(!r.ok)throw Error('HTTP '+r.status);D[k]=FEEDS[k].parse(await r.json());D.T[k]=now();D.err[k]=null}
-    catch(e){D.err[k]=e.name==='AbortError'?'timed out':(e.message||String(e))}}));
-  try{localStorage.setItem('sfish-data2',JSON.stringify({ea:D.ea,om:D.om,wx:D.wx,T:D.T}))}catch(e){}
+      const r=await fetch(FEEDS[k].url(),{cache:'no-store',signal:ctl.signal});clearTimeout(to);
+      if(!r.ok)throw Error('HTTP '+r.status);const v=FEEDS[k].parse(await r.json());if(sid!==SITE_ID)return;D[k]=v;D.T[k]=now();D.err[k]=null}
+    catch(e){if(sid===SITE_ID)D.err[k]=e.name==='AbortError'?'timed out':(e.message||String(e))}}));
+  if(sid!==SITE_ID)return;
+  try{localStorage.setItem('sfish-data-'+SITE_ID,JSON.stringify({ea:D.ea,om:D.om,wx:D.wx,T:D.T}))}catch(e){}
   calibrate();render();
 }
 
@@ -191,15 +234,15 @@ function tideInfo(t){const key=Math.round(t/3e5);if(TCACHE.has(key))return TCACH
   let prevT=t-6*H,q=Math.sign(h-tideAt(t-st));
   for(let x=t-st;x>t-14*H;x-=st){if(Math.sign(tideAt(x)-tideAt(x-st))!==q){prevT=x;break}}
   const hp=tideAt(prevT),lo=Math.min(nx.h,hp),hi=Math.max(nx.h,hp),range=Math.max(.5,hi-lo);
-  const v={h,rising:dh>0,frac:clamp((h-lo)/range,0,1),range,springs:clamp((range-3)/2.2,0,1.3),flow:Math.min(1,Math.abs(dh)/(2.6*2*Math.PI/12.42)),
+  const v={h,rising:dh>0,frac:clamp((h-lo)/range,0,1),range,springs:clamp((range-SITE.neap)/(SITE.spr-SITE.neap),0,1.3),flow:Math.min(1,Math.abs(dh)/(SITE.spr/2*2*Math.PI/12.42)),
     nextT:nx.t,nextType:nx.type,nextH:nx.h,src:CAL.src};
   if(TCACHE.size>2000)TCACHE.clear();TCACHE.set(key,v);return v}
 const tideStage=T=>T.frac<.12?'Low water':T.rising?(T.frac>.6?'Late flood':'Flooding'):(T.frac>.7?'First of the ebb':'Ebbing');
-const tideFactor=T=>T.frac<.12?.25:T.rising?.55+.9*T.frac:(T.frac>.7?1.3:.35+.6*T.frac);
+const tideFactor=T=>T.frac<.12?SITE.lowF:T.rising?.55+.9*T.frac:(T.frac>.7?1.3:.35+.6*T.frac);
 
 // ---- sun / moon ----
 const rad=Math.PI/180,J1970=2440588,J2000=2451545,E=rad*23.4397;
-function sunTimes(t){const lw=rad*-LON,phi=rad*LAT,d=t/864e5-0.5+J1970-J2000,n=Math.round(d-0.0009-lw/(2*Math.PI));
+function sunTimes(t){const lw=rad*-SITE.lon,phi=rad*SITE.lat,d=t/864e5-0.5+J1970-J2000,n=Math.round(d-0.0009-lw/(2*Math.PI));
   const ds=0.0009+lw/(2*Math.PI)+n,M=rad*(357.5291+0.98560028*ds),L=M+rad*(1.9148*Math.sin(M)+0.02*Math.sin(2*M)+0.0003*Math.sin(3*M))+rad*102.9372+Math.PI;
   const dec=Math.asin(Math.sin(E)*Math.sin(L)),Jn=J2000+ds+0.0053*Math.sin(M)-0.0069*Math.sin(2*L);
   const w=Math.acos((Math.sin(-0.833*rad)-Math.sin(phi)*Math.sin(dec))/(Math.cos(phi)*Math.cos(dec)));
@@ -223,7 +266,7 @@ function weatherAt(t){
   const w=wxRaw(t),L=light(t).ph,day=L==='day';
   const o={ok:!!w,g:1,reasons:[],sst:omNear(D.om&&D.om.sst,t),wave:omNear(D.om&&D.om.wave,t)};
   if(o.sst==null){o.sst=SST_EST[month(t)-1];o.sstEst=true}
-  if(w){Object.assign(o,w);o.dir=compass(w.wd);o.onshore=w.wd>=110&&w.wd<=250;o.offshore=w.wd>=290||w.wd<=70;
+  if(w){Object.assign(o,w);o.dir=compass(w.wd);o.onshore=angIn(w.wd,SITE.on[0],SITE.on[1]);o.offshore=angIn(w.wd,SITE.on[0]+200,SITE.on[1]+160);
     if(w.ws>28||w.wg>42){o.g*=.6;o.reasons.push(['bad','Very strong wind ('+Math.round(w.ws)+' mph): hard to hold bottom or see bites'])}
     else if(o.onshore&&w.ws>=8){o.g*=1.25;o.reasons.push(['ok','Onshore '+o.dir+' wind colouring the water'])}
     else if(o.offshore&&w.ws>=10){o.g*=.85;o.reasons.push(['meh','Offshore '+o.dir+' wind flattening the sea'])}
@@ -273,6 +316,7 @@ const FISH={
   crab:{name:'Shore crab (bait robber)',m:[4,5,6,7,8,9,10],b:{lug:.5,rag:.5,squid:.4,mackerel:.6,peeler:.3,sandeel:.4},hk:[0,7],r:{f2:.5,f3:.6,pp:.3,led:.6},nt:1,dy:1,dist:'near',w:[.05,.15],ab:.35,junk:1,tp:[9,26],
     note:'Strip soft baits fast in warm months. Use tougher baits (squid), bait elastic, or recast more often.'}
 };
+for(const k in FISH)FISH[k].key=k;
 const tipsFor=f=>({baits:Object.keys(f.b).filter(k=>f.b[k]>=.8).map(k=>BAITS[k].name),hooks:'size '+HOOKS[f.hk[0]]+'–'+HOOKS[f.hk[1]],
   rigs:Object.keys(f.r).filter(k=>f.r[k]>=.8).map(k=>RIGS[k].name),dist:DISTS[f.dist].name.toLowerCase()+' ('+DISTS[f.dist].note+')',
   time:f.dd?'dawn & dusk':f.nt>1.4?'after dark':f.dy>1?'daylight':'any time'});
@@ -282,7 +326,7 @@ function ctxAt(t){return{t,mo:month(t),T:tideInfo(t),L:light(t).ph,W:weatherAt(t
 function scoreFish(f,set,c){
   const fac=[],hi=HOOKS.indexOf(set.hook),rig=RIGS[set.rig],tp=tipsFor(f);
   const add=(k,v,fix)=>{fac.push({k,v,fix});return v};
-  let s=f.ab*(f.peak&&f.peak.includes(c.mo)?1.5:1);
+  let s=f.ab*(SITE.sp[f.key]||1)*(f.peak&&f.peak.includes(c.mo)?1.5:1);
   s*=add('bait',f.b[set.bait]||.08,'better baits: '+tp.baits.join(', '));
   const d=hi<f.hk[0]?f.hk[0]-hi:hi>f.hk[1]?hi-f.hk[1]:0;
   s*=add('hook',d===0?1:d===1?.55:.2,(hi<f.hk[0]?'hook too small':'hook too big')+', use '+tp.hooks);
@@ -291,7 +335,7 @@ function scoreFish(f,set,c){
   s*=tf;add('time',tf/tmax,'feeds best '+tp.time);
   const tdf=f.pel?(.8+.4*c.T.frac):tideFactor(c.T);s*=tdf;add('tide',tdf/1.3,'wait for the flood or the first of the ebb');
   if(f.spr)s*=.8+.5*Math.max(0,c.T.springs);
-  const yd=DISTS[set.dist].yd,pref=DISTS[f.dist].yd,df=Math.exp(-Math.pow((yd-pref)/40,2))*.8+.2;s*=add('distance',df,'fish '+tp.dist);
+  const yd=DISTS[set.dist].yd,pref=DISTS[f.dist].yd*SITE.dist,df=Math.exp(-Math.pow((yd-pref)/40,2))*.8+.2;s*=add('distance',df,'fish '+tp.dist);
   const td=c.W.sst<f.tp[0]?f.tp[0]-c.W.sst:c.W.sst>f.tp[1]?c.W.sst-f.tp[1]:0,tmpf=Math.exp(-Math.pow(td/3,2))*.85+.15;
   s*=add('water',tmpf,c.W.sst<f.tp[0]?'water too cold for them':'water too warm for them');
   if(!f.junk){
@@ -304,8 +348,9 @@ function assess(set,c){const out=[],off=[];let tot=0;
     const r=scoreFish(f,set,c);r.k=k;out.push(r);if(!f.junk)tot+=r.s}
   out.sort((a,b)=>b.s-a.s);return{list:out,tot,off}}
 const chance=s=>s>=.45?['Good chance','#7ee081']:s>=.18?['Decent','#a6e3a1']:s>=.06?['Outside chance','#ffd166']:['Unlikely','#ff8a80'];
+const T_low=T=>T.frac<.12;
 function overall(c){const tf=tideFactor(c.T),r=tf*c.W.g;
-  const reasons=[[tf>=1?'ok':tf<.5?'bad':'meh',tideStage(c.T)+(tf>=1?': prime time':tf<.5?': the water is way out over the mud':'')],...c.W.reasons];
+  const reasons=[[tf>=1?'ok':tf<.5?'bad':'meh',tideStage(c.T)+(tf>=1?': prime time':T_low(c.T)?': '+SITE.lowNote:'')],...c.W.reasons];
   if(c.L==='night')reasons.push(['ok','Dark: most estuary fish feed with more confidence']);
   if(c.L==='dawn'||c.L==='dusk')reasons.push(['ok',(c.L==='dawn'?'Dawn':'Dusk')+': a feeding window']);
   const lab=r>1.5?['Excellent','#7ee081']:r>1.05?['Good','#a6e3a1']:r>.7?['Fair','#ffd166']:['Poor','#ff8a80'];return{r,lab,reasons}}
@@ -352,7 +397,7 @@ const saveSet=()=>{try{localStorage.setItem('sfish-setup',JSON.stringify(SET))}c
 const SPK=Object.keys(FISH);
 let PC={key:''};
 function plan(){
-  const t0=sStart(),n=TRIP.hours,key=[t0,n,D.T.wx,D.T.om,D.T.ea,isLive()].join('|');
+  const t0=sStart(),n=TRIP.hours,key=[SITE_ID,t0,n,D.T.wx,D.T.om,D.T.ea,isLive()].join('|');
   if(PC.key===key)return PC.v;
   const hs=[],cs=[];for(let i=0;i<n;i++){const t=t0+i*H;hs.push(t);cs.push(ctxAt(i===0&&isLive()?now():t))}
   const N=SETUPS.length,K=SPK.length,tot=new Float64Array(N*n),big=new Float64Array(N*n),sp=new Float64Array(N*n*K);
@@ -395,10 +440,11 @@ function advice(P){
   if(!P.cs.every(c=>c.W.ok))L.push('<span class="meh">No weather forecast is available yet for part of this session, so those hours use only tide, light and season.</span>');
   // safety
   const lw=ex.find(e=>e.type==='LW')||(T0.frac<.3?{t:T0.rising?t0:T0.nextT}:null);
-  if(lw||T0.frac<.4)S.push('The flood comes in fast over the Shoebury mud. Don\'t follow the water out. If you go onto the flats, be back above the tideline as soon as the tide turns'+(lw?' (about <b>'+hm(lw.t)+'</b>)':'')+'.');
+  if(SITE.mud&&(lw||T0.frac<.4))S.push('The tide turns at about <b>'+hm(lw?lw.t:T0.nextT)+'</b>. '+SITE.safety[0]);
+  else if(lw&&!SITE.mud)S.push('Low water <b>'+hm(lw.t)+'</b>. Watch the flood on the groynes and keep your gear above the tide line.');
   if(P.cs.some(c=>c.L!=='day'))S.push('Part of this session is in the dark. Take a headtorch and spare batteries; the mud, groynes and tide line are hard to see.');
   if(wmax>28)S.push('Very strong wind is forecast. Consider postponing.');
-  S.push('Stay out of the MOD range areas: obey the signs and red flags.');
+  SITE.safety.slice(SITE.mud?1:0).forEach(x=>S.push(x));
   return{L,S}}
 function kit(P){
   const items=[],ph=phases(P),need={},hooks={},rigs={};
@@ -418,7 +464,8 @@ function kit(P){
   if(isFinite(tmin)&&tmin<10)items.push('Warm layers'+(tmin<5?', hat and gloves':'')+' (down to '+Math.round(tmin)+'°C, colder with wind chill).');
   if([5,6,7,8,9].includes(P.cs[0].mo)&&P.cs.some(c=>c.L==='day'&&c.W.ok&&c.W.cloud<40))items.push('Sun cream and a hat.');
   if(FISH.crab.m.includes(P.cs[0].mo))items.push('Bait elastic, for the crabs.');
-  items.push('Wellies or boots for the mud.');
+  if(SITE.mud)items.push('Wellies or boots for the mud.');
+  if(SITE===SITES.pier||SITE===SITES.clacton)items.push('Drop net, for landing bigger fish from the pier.');
   items.push('Bait knife and board, disgorger and forceps, towel, and a bag or bucket for any fish you keep.');
   if(P.species.some(s=>s.k==='bass'&&s.avg>.06))items.push('Check the current bass size limit and bag rules before keeping any.');
   items.push('Fully charged phone.');
@@ -447,7 +494,7 @@ const wxNote=c=>c.W.ok?'':'<div class="note">No weather forecast is available th
 // ---------- screens ----------
 function scrPlan(){const P=plan();P.isLive=isLive();const A=advice(P),R=P.avgR;
   const bi=P.hourTot.indexOf(Math.max(...P.hourTot)),top=P.species.filter(s=>!FISH[s.k].junk&&s.avg>.06).slice(0,3);
-  let h='<div class="card"><div class="verdict">Session rating: '+pill(rateLab(R),rateCol(R))+'</div>'+
+  let h='<div class="card"><div class="dim" style="font-size:13px">'+SITE.name.toUpperCase()+'</div><div class="verdict">Session rating: '+pill(rateLab(R),rateCol(R))+'</div>'+
    '<div style="margin-top:6px">Most productive hour: <b>'+hm(P.hs[bi])+'</b>. '+(top.length?'Main targets: <b>'+top.map(s=>FISH[s.k].name.toLowerCase()).join(', ')+'</b>.':'Few fish are expected.')+'</div></div>';
   h+='<h3>What to do</h3><div class="card"><ul class="r">'+A.L.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>';
   h+='<h3>Recommended setup</h3><div class="card"><div class="dim" style="font-size:13px">FOR THE MOST BITES</div><div class="setline" style="margin:4px 0">'+setText(P.best)+'</div>'+
@@ -489,7 +536,12 @@ function scrCond(sub){const c=ctxAt(vt()),T=c.T,W=c.W;let h='';
     '<div class="tile"><div>Light</div><b>'+({day:'Daylight',dawn:'Dawn',dusk:'Dusk',night:'Dark'})[c.L]+'</b><small>Rise '+hm(light(c.t).s.rise)+', set '+hm(light(c.t).s.set)+'</small></div>'+
     '<div class="tile"><div>Moon</div><b>'+moonName(moonAge(c.t))+'</b><small>'+(T.springs>.6?'Spring tides':T.springs<.25?'Neap tides':'Mid-cycle tides')+'</small></div></div>'+
     '<h3>Rating, next 24 hours</h3><div class="card">'+timeline(Math.floor(c.t/H)*H,t=>overall(ctxAt(t)).r,rateCol,2.2,sStart(),sEnd())+'</div>'+
-    '<h3>In season</h3><div class="card">'+SPK.filter(k=>FISH[k].m.includes(c.mo)&&!FISH[k].junk).map(k=>FISH[k].name).join(', ')+'</div>'}
+    '<h3>In season</h3><div class="card">'+SPK.filter(k=>FISH[k].m.includes(c.mo)&&!FISH[k].junk).map(k=>FISH[k].name).join(', ')+'</div>'+
+    '<h3>About this mark</h3><div class="card"><table><tr><td class="k">Mark</td><td>'+SITE.name+'</td></tr><tr><td class="k">Ground</td><td>'+SITE.ground+'</td></tr>'+
+    '<tr><td class="k">Faces</td><td>'+SITE.face[0].toUpperCase()+SITE.face.slice(1)+'. Onshore wind: '+compass(SITE.on[0])+' to '+compass(SITE.on[1])+'</td></tr>'+
+    '<tr><td class="k">Tide gauge</td><td>'+SITE.gname+(SITE.goff?' ('+(SITE.goff>0?'+':'')+SITE.goff+' min)':'')+'</td></tr>'+
+    '<tr><td class="k">Better here</td><td>'+(Object.keys(SITE.sp).filter(k=>SITE.sp[k]>1.15&&k!=='crab').map(k=>FISH[k].name).join(', ')||'Typical estuary mix')+'</td></tr>'+
+    (Object.keys(SITE.sp).some(k=>SITE.sp[k]<.85)?'<tr><td class="k">Fewer here</td><td>'+Object.keys(SITE.sp).filter(k=>SITE.sp[k]<.85).map(k=>FISH[k].name).join(', ')+'</td></tr>':'')+'</table></div>'}
   if(sub==='tides'){const ex=extremes(c.t-H,50).slice(0,8);
     h+='<div class="card"><div class="verdict">'+tideStage(T)+', <b>'+T.h.toFixed(2)+' m</b>, '+(T.rising?'rising':'falling')+'</div><small>at '+hm(c.t)+' '+fmtDay(c.t).toLowerCase()+'</small><br>'+
     (T.springs>.6?'<b>Spring tides.</b> Big range and strong flow. Use grip leads, and expect the water to come in fast over the flats.':T.springs<.25?'<b>Neap tides.</b> Small range and gentle flow. Plain leads hold.':'<b>Mid-cycle tides.</b> Moderate range and flow.')+'</div>'+
@@ -501,7 +553,7 @@ function scrCond(sub){const c=ctxAt(vt()),T=c.T,W=c.W;let h='';
       rows.push('<div class="hr"><div class="l1"><b>'+hm(t)+'</b><span>'+(w?compass(w.wd)+' '+Math.round(w.ws)+' mph (g'+Math.round(w.wg)+')':'–')+'</span>'+pill(rateLab(O.r),rateCol(O.r))+'</div><div class="l2">'+(w?WXCODE(w.code)[1]+' · '+Math.round(w.temp)+'°C · '+Math.round(w.p)+' hPa'+(w.rain?' · '+w.rain+' mm':''):'No forecast')+'</div></div>')}
     h+=wxNote(c)+'<div class="card"><table>'+
     (W.ok?'<tr><td class="k">Sky</td><td>'+WXCODE(W.code)[1]+', '+W.cloud+'% cloud'+(W.rain?', '+W.rain+' mm rain':'')+'</td></tr><tr><td class="k">Air</td><td>'+Math.round(W.temp)+'°C</td></tr>'+
-    '<tr><td class="k">Wind</td><td>'+W.dir+' '+Math.round(W.ws)+' mph, gusts '+Math.round(W.wg)+'<br><small>'+(W.onshore?'Onshore at Shoebury: colours the water, shortens casts':W.offshore?'Offshore at Shoebury: flattens the sea, helps casting':'Cross-shore')+'</small></td></tr>'+
+    '<tr><td class="k">Wind</td><td>'+W.dir+' '+Math.round(W.ws)+' mph, gusts '+Math.round(W.wg)+'<br><small>'+(W.onshore?'Onshore here: colours the water, shortens casts':W.offshore?'Offshore here: flattens the sea, helps casting':'Cross-shore')+'</small></td></tr>'+
     '<tr><td class="k">Pressure</td><td>'+Math.round(W.p)+' hPa<br><small>'+(W.dp>0?'+':'')+W.dp.toFixed(1)+' over the previous 6 hours</small></td></tr>':'')+
     '<tr><td class="k">Sea temp</td><td>'+W.sst.toFixed(1)+'°C'+(W.sstEst?' <small>(seasonal average)</small>':'')+'</td></tr>'+(W.wave!=null?'<tr><td class="k">Waves</td><td>'+W.wave.toFixed(1)+' m</td></tr>':'')+
     '<tr><td class="k">Moon</td><td>'+moonName(moonAge(c.t))+' ('+moonAge(c.t).toFixed(1)+' days)</td></tr></table></div><h3>Next 12 hours</h3><div class="card">'+rows.join('')+'</div>'}
@@ -531,7 +583,7 @@ function scrCatch(sub){const P=plan();let h='';
 function chipRow(key,opts,label){return '<div class="lbl">'+label+'</div><div class="chips" style="margin-bottom:6px">'+Object.keys(opts).map(k=>'<button class="chip'+(SET[key]===k?' sel':'')+'" data-k="'+key+'" data-v="'+k+'">'+opts[k].name+'<small>'+opts[k].note+'</small></button>').join('')+'</div>'}
 function scrSpecies(){const mo=month(vt());return SPK.map(k=>{const f=FISH[k],tp=tipsFor(f),inS=f.m.includes(mo);
   return '<div class="card"><div class="l1" style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">'+f.name+'</b>'+(inS?pill('In season','#7ee081'):'<small>Out of season</small>')+'</div>'+
-  '<p style="margin:6px 0">'+f.note+'</p><table>'+
+  '<p style="margin:6px 0">'+f.note+'</p>'+((SITE.sp[k]||1)>1.15?'<p class="ok" style="margin:0 0 6px">More common at '+SITE.name+'.</p>':(SITE.sp[k]||1)<.85?'<p class="meh" style="margin:0 0 6px">Less common at '+SITE.name+'.</p>':'')+'<table>'+
   '<tr><td class="k">Season</td><td>'+MONTHS[f.m[0]-1]+'–'+MONTHS[f.m[f.m.length-1]-1]+(f.peak?' (best '+f.peak.map(m=>MONTHS[m-1]).join(', ')+')':'')+'</td></tr>'+
   (f.junk?'':'<tr><td class="k">Baits</td><td>'+tp.baits.join(', ')+'</td></tr><tr><td class="k">Hooks</td><td>'+tp.hooks+'</td></tr><tr><td class="k">Rig</td><td>'+(tp.rigs.join(' or ')||'float')+'</td></tr>'+
   '<tr><td class="k">Distance</td><td>'+tp.dist+'</td></tr><tr><td class="k">When</td><td>'+tp.time+(f.spr?', bigger tides':'')+(f.col?', coloured water':'')+'</td></tr><tr><td class="k">Water temp</td><td>'+f.tp[0]+'–'+f.tp[1]+'°C</td></tr>'+
@@ -539,13 +591,16 @@ function scrSpecies(){const mo=month(vt());return SPK.map(k=>{const f=FISH[k],tp
 function scrData(){return '<div class="card">'+Object.keys(FEEDS).map(k=>{const ok=D[k]&&!D.err[k],st=D[k]&&D.err[k];
    return '<div class="hr"><div class="l1"><b>'+FEEDS[k].name+'</b>'+pill(ok?'OK':st?'Saved':'Failed',ok?'#7ee081':st?'#ffd166':'#ff8a80')+'</div><div class="l2">'+(ok?'Updated '+ago(D.T[k]):st?'Using data from '+ago(D.T[k])+' ('+D.err[k]+')':D.err[k]?D.err[k]:'Loading…')+'</div></div>'}).join('')+
   '<button class="sec" id="refreshBtn">Refresh now</button></div>'+
-  '<div class="card"><small><b>How the predictions work.</b> Each species is scored on season, bait, hook size, rig, casting distance, light, tide stage, tide size, water temperature, wind, pressure trend, cloud and sea state, using general knowledge of these fish in the Thames estuary. The planner tries all '+SETUPS.length+' tackle combinations for every hour of your session. Forecasts reach about 7 days ahead; beyond that, only the tide, light and season are used.</small></div>'+
-  '<div class="card"><small>Tides: Environment Agency Southend gauge, lined up with the Open-Meteo marine tide curve. If neither is available, an astronomical estimate (±30 min). Weather and marine data: Open-Meteo.com (CC BY 4.0). This uses Environment Agency tide gauge data from the real-time data API (Beta). For planning only, not for navigation.</small></div>'}
+  '<div class="card"><small><b>How the predictions work.</b> At '+SITE.name+', each species is scored on season, bait, hook size, rig, casting distance, light, tide stage, tide size, water temperature, wind, pressure trend, cloud and sea state, using general knowledge of these fish on the Essex coast, adjusted for this mark. The planner tries all '+SETUPS.length+' tackle combinations for every hour of your session. Forecasts reach about 7 days ahead; beyond that, only the tide, light and season are used.</small></div>'+
+  '<div class="card"><small>Tides: Environment Agency '+SITE.gname+' gauge'+(SITE.goff?' (timing adjusted by '+SITE.goff+' min for this mark)':'')+', lined up with the Open-Meteo marine tide curve. If neither is available, an astronomical estimate (±30 min). Weather and marine data: Open-Meteo.com (CC BY 4.0). This uses Environment Agency tide gauge data from the real-time data API (Beta). For planning only, not for navigation.</small></div>'}
 
 // ---------- shell ----------
 const NAV={plan:'Plan',cond:'Conditions',catch:'Catch',species:'Species',data:'Data'};
 let cur='plan',sub={cond:'overview',catch:'mine'};
 function renderHeader(){const live=isLive(),a=vt(),b=sEnd(),fut=!live&&TRIP.start>now();
+  $('siteBtn').innerHTML=SITE.name+' <i>'+($('sitePanel').hidden?'change ▾':'close ▴')+'</i>';
+  if(!$('sitePanel').hidden){let last='';$('sitePanel').innerHTML=Object.keys(SITES).map(id=>{const s=SITES[id],hd=s.area!==last?'<div class="lbl">'+s.area+'</div>':'';last=s.area;
+    return hd+'<button class="site'+(id===SITE_ID?' sel':'')+'" data-site="'+id+'"><b>'+s.name+'</b><small>'+s.ground+'</small></button>'}).join('')}
   $('liveBtn').classList.toggle('on',live);
   $('whenBtn').innerHTML='<i>'+($('whenPanel').hidden?'Change ▾':'Close ▴')+'</i><b>'+(live?'Going now':fmtDay(a))+'</b> · '+hm(a)+'–'+hm(b)+'<span class="tag" style="background:'+(live?'#7ee081':fut?'#ffd166':'#9db3ca')+'">'+(live?'LIVE':fut?'FORECAST':'EARLIER')+'</span>';
   if(!$('whenPanel').hidden){const sd=dayStart(a);
@@ -575,6 +630,10 @@ $('pDone').onclick=()=>{$('whenPanel').hidden=true;renderHeader();go('plan')};
 $('pBest').onclick=()=>{const n=TRIP.hours;let b=null;for(let d=0;d<8;d++){const a=dayStart(now(),d);for(let t=Math.max(a,Math.ceil(now()/H)*H);t+n*H<=a+24*H;t+=H){let v=0;for(let i=0;i<n;i++)v+=overall(ctxAt(t+i*H)).r;v/=n;if(!b||v>b.v)b={v,t}}}
   if(b){setTrip(b.t);$('whenPanel').hidden=true;go('plan')}};
 $('liveBtn').onclick=()=>setTrip(null);
+$('siteBtn').onclick=()=>{$('sitePanel').hidden=!$('sitePanel').hidden;$('whenPanel').hidden=true;renderHeader()};
+$('sitePanel').onclick=e=>{const b=e.target.closest('[data-site]');if(!b)return;selectSite(b.dataset.site)};
+function selectSite(id){SITE_ID=id;SITE=SITES[id];try{localStorage.setItem('sfish-site',id)}catch(e){}
+  $('sitePanel').hidden=true;loadCache();calibrate();PC.key='';render();$('main').scrollTop=0;refresh()}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&now()-Math.max(D.T.wx||0,D.T.om||0)>10*6e4)refresh()});
 calibrate();render();refresh();setInterval(refresh,15*6e4);
 setInterval(()=>{if(isLive()&&!(cur==='catch'&&sub.catch==='mine')){const y=render();$('main').scrollTop=y}},120000);
